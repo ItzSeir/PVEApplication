@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>報名清單</title>
+
+<style>
+body{
+  margin:0;
+  font-family:system-ui,-apple-system,"Noto Sans TC";
+  background:#f5f7fb;
+}
+
+.container{
+  max-width:1100px;
+  margin:auto;
+  padding:20px;
+}
+
+h1{
+  margin-bottom:10px;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:100px repeat(7,1fr);
+  border:1px solid #ddd;
+}
+
+.cell{
+  border:1px solid #eee;
+  padding:8px;
+  text-align:center;
+  cursor:pointer;
+  min-height:40px;
+}
+
+.header{
+  background:#111;
+  color:white;
+  font-weight:bold;
+}
+
+.time{
+  background:#f0f0f0;
+}
+
+.filled{
+  background:#d1fae5;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+  <h1>報名清單（本週 + 下週）</h1>
+  <div id="app"></div>
+</div>
+
+<script>
+const startHour = 10;
+const endHour = 22;
+
+function pad(n){ return n.toString().padStart(2,'0'); }
+
+function getTimes(){
+  let arr=[];
+  for(let h=startHour;h<endHour;h++){
+    arr.push(pad(h)+":00");
+    arr.push(pad(h)+":30");
+  }
+  return arr;
+}
+
+function getMonday(d){
+  d = new Date(d);
+  let day = d.getDay();
+  let diff = (day===0?-6:1-day);
+  d.setDate(d.getDate()+diff);
+  return d;
+}
+
+function addDays(d,n){
+  let x=new Date(d);
+  x.setDate(x.getDate()+n);
+  return x;
+}
+
+function format(d){
+  return d.toISOString().split("T")[0];
+}
+
+let data = JSON.parse(localStorage.getItem("schedule")||"{}");
+
+function save(){
+  localStorage.setItem("schedule",JSON.stringify(data));
+}
+
+function renderWeek(title, monday){
+  let times = getTimes();
+  let html = `<h2>${title}</h2><div class="grid">`;
+
+  html += `<div class="cell header">時間</div>`;
+  for(let i=0;i<7;i++){
+    let d=addDays(monday,i);
+    html += `<div class="cell header">${d.getMonth()+1}/${d.getDate()}</div>`;
+  }
+
+  times.forEach(t=>{
+    html += `<div class="cell time">${t}</div>`;
+
+    for(let i=0;i<7;i++){
+      let d=addDays(monday,i);
+      let key=format(d)+"_"+t;
+      let value=data[key]||"";
+
+      html += `<div class="cell ${value?"filled":""}" onclick="edit('${key}')">${value||"+"}</div>`;
+    }
+  });
+
+  html += `</div>`;
+  return html;
+}
+
+function edit(key){
+  let name = prompt("輸入名字（留空清除）", data[key]||"");
+  if(name===null) return;
+
+  if(name.trim()==="") delete data[key];
+  else data[key]=name.trim();
+
+  save();
+  render();
+}
+
+function render(){
+  let app=document.getElementById("app");
+
+  let monday=getMonday(new Date());
+  let next=addDays(monday,7);
+
+  app.innerHTML =
+    renderWeek("本週",monday) +
+    renderWeek("下週",next);
+}
+
+render();
+</script>
+
+</body>
+</html>
