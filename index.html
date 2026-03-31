@@ -1,269 +1,915 @@
 <!doctype html>
 <html lang="zh-Hant">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>報名清單</title>
-
-<style>
-:root{
-  --bg:#0b1020;
-  --bg2:#131c35;
-  --line:rgba(255,255,255,.12);
-  --text:#eef2ff;
-  --muted:#a8b3cf;
-}
-
-body{
-  margin:0;
-  font-family:system-ui;
-  background:linear-gradient(180deg,var(--bg),var(--bg2));
-  color:var(--text);
-}
-
-.container{max-width:1400px;margin:auto;padding:20px}
-
-.days{display:flex;flex-direction:column;gap:20px}
-
-.day-card{
-  display:grid;
-  grid-template-columns:200px 1fr;
-  gap:16px;
-}
-
-.slot-list{
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
-  gap:12px;
-}
-
-.slot-card{
-  background:rgba(255,255,255,.06);
-  border:1px solid var(--line);
-  border-radius:14px;
-  padding:10px;
-}
-
-.slot-card.has-members{background:rgba(110,168,255,.15)}
-.slot-card.full-team{background:rgba(255,107,129,.25)}
-
-.member{display:flex;justify-content:space-between;margin:4px 0}
-
-button{cursor:pointer;border:none;border-radius:8px;padding:6px 10px}
-
-.add-btn{background:#333;color:#fff}
-.remove-btn{color:#ff6b81;background:none}
-
-/* ⭐推薦 */
-.star{color:gold;font-size:12px;margin-left:6px}
-
-/* modal */
-.modal{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.7);
-  display:none;
-  align-items:center;
-  justify-content:center;
-  z-index:9999;
-}
-
-.modal.show{display:flex}
-
-.modal-box{
-  background:#1f2937;
-  padding:20px;
-  border-radius:16px;
-  width:300px;
-}
-
-.modal-box input,.modal-box select{
-  width:100%;
-  margin:10px 0;
-  padding:10px;
-  border-radius:8px;
-  border:none;
-  background:#111827;
-  color:#fff;
-}
-
-.modal-actions{display:flex;gap:10px}
-.modal-actions button{flex:1}
-</style>
-</head>
-
-<body>
-<div class="container">
-<div id="app" class="days"></div>
-</div>
-
-<!-- modal -->
-<div id="signupModal" class="modal">
-  <div class="modal-box">
-    <h3>報名</h3>
-    <input id="playerName" placeholder="輸入名字">
-    <select id="roleSelect"></select>
-    <div class="modal-actions">
-      <button onclick="submitSignup()">確認</button>
-      <button onclick="closeModal()">取消</button>
-    </div>
-  </div>
-</div>
-
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import {
-  getFirestore,
-  doc,
-  setDoc,
-  getDoc,
-  collection,
-  onSnapshot
-} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyD3NalXMRjiag_26-g82UtxeDvuSjydg30",
-  authDomain: "pve-ab4a8.firebaseapp.com",
-  projectId: "pve-ab4a8"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
-let data={};
-let currentSignup={};
-
-function today(){let d=new Date();d.setHours(0,0,0,0);return d;}
-function add(d,i){let x=new Date(d);x.setDate(x.getDate()+i);return x;}
-function key(d){return d.toISOString().split("T")[0];}
-
-function isWeekend(d){
-  let day=d.getDay();
-  return day===0||day===6;
-}
-
-function defaultDay(date){
-  let weekday=["19:45","20:30","21:30"];
-  let weekend=["14:00","16:00","18:00"];
-
-  let times=isWeekend(date)?weekend:weekday;
-
-  return {slots:times.map(t=>({
-    time:t,
-    members:[],
-    isCustom:false
-  }))};
-}
-
-async function init(){
-  let t=today();
-  for(let i=0;i<5;i++){
-    let d=add(t,i);
-    let k=key(d);
-    let ref=doc(db,"schedule",k);
-    let snap=await getDoc(ref);
-    if(!snap.exists()){
-      await setDoc(ref,defaultDay(d));
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>燕雲十六聲 報名清單</title>
+  <style>
+    :root{
+      --bg:#0b1020;
+      --bg2:#131c35;
+      --panel:rgba(255,255,255,.08);
+      --panel2:rgba(255,255,255,.05);
+      --line:rgba(255,255,255,.12);
+      --text:#eef2ff;
+      --muted:#a8b3cf;
+      --accent:#6ea8ff;
+      --accent2:#8b5cf6;
+      --danger:#ff6b81;
+      --success:#34d399;
+      --warn:#fbbf24;
+      --heal:#22c55e;
+      --tank:#f59e0b;
+      --dps:#60a5fa;
+      --shadow:0 18px 40px rgba(0,0,0,.28);
+      --radius:22px;
     }
-  }
-}
 
-function render(){
-  let el=document.getElementById("app");
-  let html="";
-  let t=today();
+    *{ box-sizing:border-box; }
+    html,body{
+      margin:0;
+      padding:0;
+      font-family:system-ui,-apple-system,"Segoe UI","Noto Sans TC",Arial,sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(110,168,255,.18), transparent 28%),
+        radial-gradient(circle at top right, rgba(139,92,246,.16), transparent 24%),
+        linear-gradient(180deg, var(--bg), var(--bg2));
+    }
 
-  for(let i=0;i<5;i++){
-    let d=add(t,i);
-    let k=key(d);
-    let day=data[k];
-    if(!day) continue;
+    body{ padding:24px 14px 40px; }
 
-    html+=`<div class="day-card"><div>${k}</div><div class="slot-list">`;
+    .container{
+      max-width:1600px;
+      margin:0 auto;
+    }
 
-    day.slots.forEach((s,si)=>{
-      let cls="slot-card";
-      if(s.members.length>=10) cls+=" full-team";
-      else if(s.members.length>0) cls+=" has-members";
+    .hero{
+      background:linear-gradient(135deg, rgba(255,255,255,.10), rgba(255,255,255,.05));
+      border:1px solid var(--line);
+      box-shadow:var(--shadow);
+      border-radius:28px;
+      padding:24px;
+      backdrop-filter:blur(14px);
+      margin-bottom:20px;
+    }
 
-      let star = (!isWeekend(d) && s.time==="19:45") ? `<span class="star">★推薦</span>` : "";
+    .title{
+      margin:0;
+      font-size:clamp(28px,4vw,42px);
+      line-height:1.1;
+    }
 
-      html+=`<div class="${cls}">
-        <b>${s.time}${star}</b> (${s.members.length}/10)
-      `;
+    .subtitle{
+      margin:10px 0 0;
+      font-size:15px;
+      color:var(--muted);
+    }
 
-      s.members.forEach((m,mi)=>{
-        html+=`
-        <div class="member">
-          ${m.name}(${m.role})
-          <button class="remove-btn" onclick="removeMember('${k}',${si},${mi})">刪</button>
-        </div>`;
+    .chips{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top:16px;
+    }
+
+    .chip{
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.08);
+      color:var(--text);
+      border-radius:999px;
+      padding:8px 12px;
+      font-size:13px;
+    }
+
+    .toolbar{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-bottom:18px;
+    }
+
+    .toolbar-actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    button{
+      border:none;
+      cursor:pointer;
+      border-radius:14px;
+      padding:10px 14px;
+      font-size:14px;
+      font-weight:700;
+      transition:.18s ease;
+    }
+
+    button:hover{ transform:translateY(-1px); }
+
+    .btn-ghost{
+      background:rgba(255,255,255,.08);
+      color:var(--text);
+      border:1px solid var(--line);
+    }
+
+    .days{
+      display:flex;
+      flex-direction:column;
+      gap:18px;
+    }
+
+    .day-card{
+      display:grid;
+      grid-template-columns: 260px minmax(0, 1fr);
+      gap:18px;
+      background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
+      border:1px solid var(--line);
+      box-shadow:var(--shadow);
+      border-radius:24px;
+      padding:18px;
+      backdrop-filter:blur(14px);
+      align-items:start;
+    }
+
+    .day-head{
+      position:sticky;
+      top:14px;
+      align-self:start;
+      padding-right:8px;
+    }
+
+    .day-title{
+      margin:0;
+      font-size:28px;
+      line-height:1.1;
+    }
+
+    .day-sub{
+      margin-top:8px;
+      color:var(--muted);
+      font-size:14px;
+    }
+
+    .day-actions{
+      margin-top:14px;
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+    }
+
+    .slot-list{
+      display:grid;
+      grid-template-columns:repeat(auto-fill, minmax(250px, 1fr));
+      gap:14px;
+      min-width:0;
+    }
+
+    .slot-card{
+      background:rgba(255,255,255,.06);
+      border:1px solid var(--line);
+      border-radius:18px;
+      padding:12px;
+      min-width:0;
+      transition:.18s ease;
+    }
+
+    .slot-card.has-members{
+      background:rgba(110,168,255,.12);
+      border-color:rgba(110,168,255,.28);
+      box-shadow:0 8px 18px rgba(110,168,255,.10);
+    }
+
+    .slot-card.full-team{
+      background:rgba(255,107,129,.18);
+      border-color:rgba(255,107,129,.34);
+      box-shadow:0 8px 18px rgba(255,107,129,.12);
+    }
+
+    .slot-card.full-team .slot-time,
+    .slot-card.full-team .slot-instance{
+      color:#ffdbe4;
+    }
+
+    .slot-top{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:8px;
+      margin-bottom:10px;
+    }
+
+    .slot-time{
+      font-size:18px;
+      font-weight:800;
+      line-height:1.1;
+    }
+
+    .slot-instance{
+      margin-top:4px;
+      color:var(--muted);
+      font-size:12px;
+    }
+
+    .slot-badges{
+      display:flex;
+      gap:6px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+
+    .badge{
+      border-radius:999px;
+      padding:5px 8px;
+      font-size:12px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.06);
+      color:var(--muted);
+    }
+
+    .status-ok{ color:var(--success); }
+    .status-warn{ color:var(--danger); }
+    .status-full{ color:var(--warn); }
+
+    .summary{
+      display:flex;
+      gap:6px;
+      flex-wrap:wrap;
+      margin-bottom:10px;
+    }
+
+    .summary-pill{
+      font-size:12px;
+      border-radius:999px;
+      padding:5px 8px;
+      background:rgba(255,255,255,.06);
+      border:1px solid var(--line);
+      color:var(--muted);
+    }
+
+    .summary-pill strong{ color:var(--text); }
+
+    .member-list{
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+      min-height:46px;
+    }
+
+    .member{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:8px;
+      padding:8px 10px;
+      border-radius:14px;
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.08);
+    }
+
+    .member-left{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      min-width:0;
+    }
+
+    .role-badge{
+      font-size:12px;
+      font-weight:800;
+      border-radius:999px;
+      padding:5px 8px;
+      white-space:nowrap;
+    }
+
+    .role-dps{
+      background:rgba(96,165,250,.16);
+      color:var(--dps);
+      border:1px solid rgba(96,165,250,.28);
+    }
+
+    .role-tank{
+      background:rgba(245,158,11,.14);
+      color:var(--tank);
+      border:1px solid rgba(245,158,11,.28);
+    }
+
+    .role-heal{
+      background:rgba(34,197,94,.14);
+      color:var(--heal);
+      border:1px solid rgba(34,197,94,.28);
+    }
+
+    .member-name{
+      font-size:14px;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      white-space:nowrap;
+    }
+
+    .remove-btn{
+      background:transparent;
+      color:var(--danger);
+      padding:4px 6px;
+      font-size:13px;
+      border:none;
+      border-radius:10px;
+      flex:0 0 auto;
+    }
+
+    .remove-btn:hover{
+      background:rgba(255,107,129,.12);
+    }
+
+    .slot-actions{
+      display:flex;
+      gap:8px;
+      margin-top:10px;
+      flex-wrap:wrap;
+    }
+
+    .add-btn, .delete-slot-btn{
+      flex:1 1 100px;
+      background:rgba(255,255,255,.06);
+      color:var(--text);
+      border:1px dashed rgba(255,255,255,.18);
+      padding:9px 10px;
+      border-radius:14px;
+      font-size:13px;
+      font-weight:700;
+    }
+
+    .delete-slot-btn{
+      color:#ffb4c1;
+      border-color:rgba(255,107,129,.28);
+      background:rgba(255,107,129,.08);
+    }
+
+    .add-btn:disabled,
+    .delete-slot-btn:disabled{
+      opacity:.55;
+      cursor:not-allowed;
+    }
+
+    .empty-note{
+      color:var(--muted);
+      font-size:13px;
+      padding:6px 2px 2px;
+    }
+
+    @media (max-width: 1100px){
+      .day-card{
+        grid-template-columns:1fr;
+      }
+
+      .day-head{
+        position:static;
+        padding-right:0;
+      }
+
+      .slot-list{
+        grid-template-columns:repeat(auto-fill, minmax(220px, 1fr));
+      }
+    }
+
+    @media (max-width:768px){
+      body{ padding:16px 10px 30px; }
+      .hero{ padding:18px; }
+      .day-card{ padding:14px; }
+      .slot-list{
+        grid-template-columns:1fr;
+      }
+      .day-title{
+        font-size:24px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <section class="hero">
+      <h1 class="title">燕雲十六聲 夢回花深處俠境報名清單</h1>
+      <p class="subtitle">目前進行測試中</p>
+      <div class="chips">
+        <span class="chip">一隊最多10人</span>
+        <span class="chip">每隊至少2個治療</span>
+      </div>
+    </section>
+
+    <div class="toolbar">
+      <div class="toolbar-actions">
+        <button class="btn-ghost" id="refreshBtn">整理日期</button>
+      </div>
+    </div>
+
+    <div class="days" id="days"></div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import {
+      getFirestore,
+      doc,
+      getDoc,
+      setDoc,
+      collection,
+      onSnapshot
+    } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyD3NalXMRjiag_26-g82UtxeDvuSjydg30",
+      authDomain: "pve-ab4a8.firebaseapp.com",
+      projectId: "pve-ab4a8",
+      storageBucket: "pve-ab4a8.firebasestorage.app",
+      messagingSenderId: "292971877558",
+      appId: "1:292971877558:web:69b8ed8f70987847a44217",
+      measurementId: "G-ESW46GLEV2"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    const CONFIG = {
+      daysToShow: 5,
+      maxPeople: 10,
+      minHealer: 2,
+      weekdayTimes: ["19:45","20:30","21:30","00:00"],
+      weekendTimes: ["14:00","16:00","18:00","21:30"],
+      roles: ["輸出","承傷","治療"],
+      collectionName: "schedule"
+    };
+
+    let globalData = {};
+    let isRendering = false;
+
+    function getTodayStart(){
+      const d = new Date();
+      d.setHours(0,0,0,0);
+      return d;
+    }
+
+    function addDays(date, n){
+      const d = new Date(date);
+      d.setDate(d.getDate() + n);
+      return d;
+    }
+
+    function pad(n){
+      return String(n).padStart(2, "0");
+    }
+
+    function formatDate(date){
+      return `${date.getFullYear()}-${pad(date.getMonth()+1)}-${pad(date.getDate())}`;
+    }
+
+    function displayDate(date){
+      return `${date.getMonth()+1}/${date.getDate()}`;
+    }
+
+    function weekdayText(date){
+      return ["星期日","星期一","星期二","星期三","星期四","星期五","星期六"][date.getDay()];
+    }
+
+    function isWeekend(date){
+      return date.getDay() === 0 || date.getDay() === 6;
+    }
+
+    function getDefaultTimesForDate(date){
+      return isWeekend(date) ? [...CONFIG.weekendTimes] : [...CONFIG.weekdayTimes];
+    }
+
+    function getDatesToShow(){
+      const today = getTodayStart();
+      return Array.from({length: CONFIG.daysToShow}, (_, i) => addDays(today, i));
+    }
+
+    function sortSlots(slots){
+      slots.sort((a,b) => {
+        if(a.time === b.time) return (a.instance || 1) - (b.instance || 1);
+        return a.time.localeCompare(b.time);
+      });
+    }
+
+    function countRole(members, role){
+      return members.filter(m => m.role === role).length;
+    }
+
+    function getAllowedRoles(members){
+      const healerCount = countRole(members, "治療");
+      const remaining = CONFIG.maxPeople - members.length;
+
+      if(remaining <= 2 && healerCount < CONFIG.minHealer){
+        return ["治療"];
+      }
+      return [...CONFIG.roles];
+    }
+
+    function getStatus(members){
+      if(members.length >= CONFIG.maxPeople){
+        return { text: "已滿", cls: "status-full" };
+      }
+      if(countRole(members, "治療") < CONFIG.minHealer){
+        return { text: "治療不足", cls: "status-warn" };
+      }
+      return { text: "配置達標", cls: "status-ok" };
+    }
+
+    function roleClass(role){
+      if(role === "輸出") return "role-dps";
+      if(role === "承傷") return "role-tank";
+      return "role-heal";
+    }
+
+    function escapeHtml(str){
+      return String(str)
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+    }
+
+    function promptForSignup(allowedRoles){
+      const name = prompt("請輸入角色名稱 / 玩家名稱");
+      if(name === null) return null;
+
+      const trimmedName = name.trim();
+      if(!trimmedName){
+        alert("名字不可留空。");
+        return null;
+      }
+
+      const role = prompt(`請輸入職業：${allowedRoles.join(" / ")}`, allowedRoles[0]);
+      if(role === null) return null;
+
+      const trimmedRole = role.trim();
+      if(!allowedRoles.includes(trimmedRole)){
+        alert(`目前只能選：${allowedRoles.join("、")}`);
+        return null;
+      }
+
+      return { name: trimmedName, role: trimmedRole };
+    }
+
+    function buildDefaultDayData(dateObj){
+      const slots = [];
+      const defaultTimes = getDefaultTimesForDate(dateObj);
+
+      defaultTimes.forEach(time => {
+        slots.push({
+          time,
+          instance: 1,
+          members: [],
+          isCustom: false
+        });
       });
 
-      html+=`
-      <button class="add-btn" onclick="openModal('${k}',${si})">＋報名</button>
-      </div>`;
+      if(!isWeekend(dateObj)){
+        slots.push({
+          time: "19:45",
+          instance: 2,
+          members: [],
+          isCustom: false
+        });
+      }
+
+      sortSlots(slots);
+      return { slots };
+    }
+
+    async function ensureDateDoc(dateKey, dateObj){
+      const ref = doc(db, CONFIG.collectionName, dateKey);
+      const snap = await getDoc(ref);
+
+      if(!snap.exists()){
+        await setDoc(ref, buildDefaultDayData(dateObj));
+      } else {
+        const data = snap.data();
+        if(!data.slots || !Array.isArray(data.slots)){
+          await setDoc(ref, buildDefaultDayData(dateObj));
+        } else {
+          let changed = false;
+          data.slots = data.slots.map(slot => {
+            if(typeof slot.isCustom === "undefined"){
+              changed = true;
+              return { ...slot, isCustom: false };
+            }
+            return slot;
+          });
+          if(changed){
+            await setDoc(ref, data);
+          }
+        }
+      }
+    }
+
+    async function initializeVisibleDates(){
+      const dates = getDatesToShow();
+      for(const dateObj of dates){
+        await ensureDateDoc(formatDate(dateObj), dateObj);
+      }
+    }
+
+    function autoCreateNextSameTimeSlot(dayData, time){
+      const sameTimeSlots = dayData.slots.filter(s => s.time === time);
+      const hasOpenSlot = sameTimeSlots.some(s => (s.members || []).length < CONFIG.maxPeople);
+
+      if(!hasOpenSlot){
+        const maxInstance = sameTimeSlots.reduce((max, s) => Math.max(max, s.instance || 1), 1);
+        dayData.slots.push({
+          time,
+          instance: maxInstance + 1,
+          members: [],
+          isCustom: true
+        });
+        sortSlots(dayData.slots);
+      }
+    }
+
+    async function addMember(dateKey, slotIndex){
+      const dayData = structuredClone(globalData[dateKey]);
+      if(!dayData || !Array.isArray(dayData.slots)) return;
+
+      const slot = dayData.slots[slotIndex];
+      if(!slot) return;
+
+      slot.members = Array.isArray(slot.members) ? slot.members : [];
+
+      if(slot.members.length >= CONFIG.maxPeople){
+        alert("此時段已滿。");
+        autoCreateNextSameTimeSlot(dayData, slot.time);
+        await setDoc(doc(db, CONFIG.collectionName, dateKey), dayData);
+        return;
+      }
+
+      const allowedRoles = getAllowedRoles(slot.members);
+      const entry = promptForSignup(allowedRoles);
+      if(!entry) return;
+
+      slot.members.push(entry);
+
+      if(slot.members.length >= CONFIG.maxPeople){
+        autoCreateNextSameTimeSlot(dayData, slot.time);
+      }
+
+      await setDoc(doc(db, CONFIG.collectionName, dateKey), dayData);
+    }
+
+    async function addCustomTime(dateKey){
+      const dayData = structuredClone(globalData[dateKey]);
+      if(!dayData || !Array.isArray(dayData.slots)) return;
+
+      const time = prompt("請輸入新時間（格式例如 19:45）");
+      if(time === null) return;
+
+      const trimmed = time.trim();
+      if(!/^\d{1,2}:\d{2}$/.test(trimmed)){
+        alert("時間格式不正確，請用 HH:MM，例如 19:45");
+        return;
+      }
+
+      const [h, m] = trimmed.split(":").map(Number);
+      if(h < 0 || h > 23 || m < 0 || m > 59){
+        alert("時間格式不正確。");
+        return;
+      }
+
+      const sameTimeSlots = dayData.slots.filter(s => s.time === trimmed);
+      const nextInstance = sameTimeSlots.length
+        ? Math.max(...sameTimeSlots.map(s => s.instance || 1)) + 1
+        : 1;
+
+      dayData.slots.push({
+        time: trimmed,
+        instance: nextInstance,
+        members: [],
+        isCustom: true
+      });
+
+      sortSlots(dayData.slots);
+      await setDoc(doc(db, CONFIG.collectionName, dateKey), dayData);
+    }
+
+    async function removeMember(dateKey, slotIndex, memberIndex){
+      const dayData = structuredClone(globalData[dateKey]);
+      if(!dayData || !Array.isArray(dayData.slots)) return;
+      if(!dayData.slots[slotIndex]) return;
+
+      const members = Array.isArray(dayData.slots[slotIndex].members)
+        ? dayData.slots[slotIndex].members
+        : [];
+
+      const member = members[memberIndex];
+      if(!member) return;
+
+      const ok = confirm(`確定要刪除報名玩家「${member.name}」嗎？`);
+      if(!ok) return;
+
+      members.splice(memberIndex, 1);
+      dayData.slots[slotIndex].members = members;
+
+      await setDoc(doc(db, CONFIG.collectionName, dateKey), dayData);
+    }
+
+    async function deleteCustomSlot(dateKey, slotIndex){
+      const dayData = structuredClone(globalData[dateKey]);
+      if(!dayData || !Array.isArray(dayData.slots)) return;
+      const slot = dayData.slots[slotIndex];
+      if(!slot) return;
+
+      if(!slot.isCustom){
+        alert("固定時間段不能刪除。");
+        return;
+      }
+
+      const members = Array.isArray(slot.members) ? slot.members : [];
+      if(members.length > 0){
+        alert("這個時間段已有報名，不能刪除。");
+        return;
+      }
+
+      dayData.slots.splice(slotIndex, 1);
+      sortSlots(dayData.slots);
+      await setDoc(doc(db, CONFIG.collectionName, dateKey), dayData);
+    }
+
+    function render(){
+      if(isRendering) return;
+      isRendering = true;
+
+      const dates = getDatesToShow();
+      const daysEl = document.getElementById("days");
+      let html = "";
+
+      dates.forEach(date => {
+        const dateKey = formatDate(date);
+        const dayData = globalData[dateKey];
+        const modeText = isWeekend(date) ? "週末時間表" : "平日時間表";
+
+        html += `
+          <section class="day-card">
+            <div class="day-head">
+              <h2 class="day-title">${displayDate(date)}</h2>
+              <div class="day-sub">${weekdayText(date)}｜${modeText}</div>
+              <div class="day-actions">
+                <button class="btn-ghost" data-action="add-time" data-date="${dateKey}">＋ 新增時間</button>
+              </div>
+            </div>
+            <div class="slot-list">
+        `;
+
+        if(dayData && Array.isArray(dayData.slots)){
+          dayData.slots.forEach((slot, slotIndex) => {
+            const members = Array.isArray(slot.members) ? slot.members : [];
+            const dpsCount = countRole(members, "輸出");
+            const tankCount = countRole(members, "承傷");
+            const healCount = countRole(members, "治療");
+            const status = getStatus(members);
+            const allowedRoles = getAllowedRoles(members);
+            const forceHeal = allowedRoles.length === 1 && allowedRoles[0] === "治療";
+            const canDeleteCustomSlot = !!slot.isCustom && members.length === 0;
+
+            const slotCardClass = members.length >= CONFIG.maxPeople
+              ? "slot-card full-team"
+              : members.length > 0
+                ? "slot-card has-members"
+                : "slot-card";
+
+            html += `
+              <div class="${slotCardClass}">
+                <div class="slot-top">
+                  <div>
+                    <div class="slot-time">${slot.time}</div>
+                    <div class="slot-instance">
+                      第 ${slot.instance || 1} 隊
+                      ${slot.isCustom ? "｜自訂" : "｜固定"}
+                    </div>
+                  </div>
+                  <div class="slot-badges">
+                    <span class="badge">${members.length}/${CONFIG.maxPeople}</span>
+                    <span class="badge ${status.cls}">
+                      ${forceHeal && members.length < CONFIG.maxPeople ? "最後位置保留治療" : status.text}
+                    </span>
+                  </div>
+                </div>
+
+                <div class="summary">
+                  <span class="summary-pill">輸出 <strong>${dpsCount}</strong></span>
+                  <span class="summary-pill">承傷 <strong>${tankCount}</strong></span>
+                  <span class="summary-pill">治療 <strong>${healCount}</strong></span>
+                </div>
+
+                <div class="member-list">
+            `;
+
+            if(members.length === 0){
+              html += `<div class="empty-note">尚未有人報名</div>`;
+            } else {
+              members.forEach((member, memberIndex) => {
+                html += `
+                  <div class="member">
+                    <div class="member-left">
+                      <span class="role-badge ${roleClass(member.role)}">${member.role}</span>
+                      <span class="member-name">${escapeHtml(member.name)}</span>
+                    </div>
+                    <button class="remove-btn" data-action="remove-member" data-date="${dateKey}" data-slot="${slotIndex}" data-member="${memberIndex}">刪除</button>
+                  </div>
+                `;
+              });
+            }
+
+            html += `
+                </div>
+
+                <div class="slot-actions">
+                  <button class="add-btn" data-action="add-member" data-date="${dateKey}" data-slot="${slotIndex}" ${members.length >= CONFIG.maxPeople ? "disabled" : ""}>
+                    ${members.length >= CONFIG.maxPeople ? "此隊已滿" : forceHeal ? "＋ 僅限新增治療" : "＋ 新增報名"}
+                  </button>
+                  ${slot.isCustom ? `
+                    <button class="delete-slot-btn" data-action="delete-slot" data-date="${dateKey}" data-slot="${slotIndex}" ${canDeleteCustomSlot ? "" : "disabled"}>
+                      刪除時間
+                    </button>
+                  ` : ``}
+                </div>
+              </div>
+            `;
+          });
+        }
+
+        html += `
+            </div>
+          </section>
+        `;
+      });
+
+      daysEl.innerHTML = html;
+      bindActions();
+      isRendering = false;
+    }
+
+    function bindActions(){
+      document.querySelectorAll('[data-action="add-time"]').forEach(btn => {
+        btn.onclick = () => addCustomTime(btn.dataset.date);
+      });
+
+      document.querySelectorAll('[data-action="add-member"]').forEach(btn => {
+        btn.onclick = () => addMember(btn.dataset.date, Number(btn.dataset.slot));
+      });
+
+      document.querySelectorAll('[data-action="remove-member"]').forEach(btn => {
+        btn.onclick = () => removeMember(
+          btn.dataset.date,
+          Number(btn.dataset.slot),
+          Number(btn.dataset.member)
+        );
+      });
+
+      document.querySelectorAll('[data-action="delete-slot"]').forEach(btn => {
+        btn.onclick = () => deleteCustomSlot(
+          btn.dataset.date,
+          Number(btn.dataset.slot)
+        );
+      });
+    }
+
+    document.getElementById("refreshBtn").onclick = async () => {
+      await initializeVisibleDates();
+      alert("日期已整理完成。");
+    };
+
+    onSnapshot(collection(db, CONFIG.collectionName), async (snapshot) => {
+      const nextData = {};
+      snapshot.forEach(item => {
+        const data = item.data();
+        if(data && Array.isArray(data.slots)){
+          sortSlots(data.slots);
+          nextData[item.id] = data;
+        }
+      });
+      globalData = nextData;
+
+      const dates = getDatesToShow();
+      let missing = false;
+      for(const dateObj of dates){
+        const key = formatDate(dateObj);
+        if(!globalData[key]){
+          missing = true;
+          break;
+        }
+      }
+
+      if(missing){
+        await initializeVisibleDates();
+        return;
+      }
+
+      render();
     });
 
-    html+="</div></div>";
-  }
-
-  el.innerHTML=html;
-}
-
-window.openModal=(k,i)=>{
-  currentSignup={k,i};
-
-  let select=document.getElementById("roleSelect");
-  select.innerHTML="";
-
-  ["輸出","承傷","治療"].forEach(r=>{
-    let opt=document.createElement("option");
-    opt.value=r;
-    opt.textContent=r;
-    select.appendChild(opt);
-  });
-
-  document.getElementById("signupModal").classList.add("show");
-};
-
-window.closeModal=()=>{
-  document.getElementById("signupModal").classList.remove("show");
-};
-
-window.submitSignup=async ()=>{
-  let name=document.getElementById("playerName").value.trim();
-  let role=document.getElementById("roleSelect").value;
-
-  if(!name){alert("輸入名字");return;}
-
-  let {k,i}=currentSignup;
-  let d=structuredClone(data[k]);
-
-  d.slots[i].members.push({name,role});
-
-  await setDoc(doc(db,"schedule",k),d);
-  closeModal();
-};
-
-window.removeMember=async (k,i,m)=>{
-  let d=structuredClone(data[k]);
-  let member=d.slots[i].members[m];
-
-  if(!confirm(`刪除 ${member.name}?`)) return;
-
-  d.slots[i].members.splice(m,1);
-  await setDoc(doc(db,"schedule",k),d);
-};
-
-onSnapshot(collection(db,"schedule"),snap=>{
-  data={};
-  snap.forEach(doc=>data[doc.id]=doc.data());
-  render();
-});
-
-await init();
-render();
-</script>
+    await initializeVisibleDates();
+    render();
+  </script>
 </body>
 </html>
