@@ -3,69 +3,70 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>燕雲十六聲 夢回花深處俠境報名清單</title>
+  <title>燕雲十六聲 報名清單</title>
   <style>
     :root{
-      --bg: #0b1020;
-      --bg2: #121a31;
-      --panel: rgba(255,255,255,.08);
-      --line: rgba(255,255,255,.12);
-      --text: #eef2ff;
-      --muted: #a8b3cf;
-      --accent: #6ea8ff;
-      --accent2: #8b5cf6;
-      --danger: #ff6b81;
-      --success: #34d399;
-      --warn: #fbbf24;
-      --heal: #22c55e;
-      --tank: #f59e0b;
-      --dps: #60a5fa;
-      --shadow: 0 18px 40px rgba(0,0,0,.28);
-      --radius: 22px;
+      --bg:#0b1020;
+      --bg2:#131c35;
+      --panel:rgba(255,255,255,.08);
+      --panel2:rgba(255,255,255,.05);
+      --line:rgba(255,255,255,.12);
+      --text:#eef2ff;
+      --muted:#a8b3cf;
+      --accent:#6ea8ff;
+      --accent2:#8b5cf6;
+      --danger:#ff6b81;
+      --success:#34d399;
+      --warn:#fbbf24;
+      --heal:#22c55e;
+      --tank:#f59e0b;
+      --dps:#60a5fa;
+      --shadow:0 18px 40px rgba(0,0,0,.28);
+      --radius:22px;
     }
 
     *{ box-sizing:border-box; }
     html,body{
       margin:0;
       padding:0;
+      font-family:system-ui,-apple-system,"Segoe UI","Noto Sans TC",Arial,sans-serif;
+      color:var(--text);
       background:
         radial-gradient(circle at top left, rgba(110,168,255,.18), transparent 28%),
         radial-gradient(circle at top right, rgba(139,92,246,.16), transparent 24%),
         linear-gradient(180deg, var(--bg), var(--bg2));
-      color:var(--text);
-      font-family:system-ui,-apple-system,"Segoe UI","Noto Sans TC",Arial,sans-serif;
     }
 
-    body{ padding:28px 16px 48px; }
+    body{ padding:24px 14px 40px; }
 
     .container{
-      max-width: 1600px;
-      margin: 0 auto;
+      max-width:1400px;
+      margin:0 auto;
     }
 
     .hero{
-      background: linear-gradient(135deg, rgba(255,255,255,.09), rgba(255,255,255,.05));
-      border: 1px solid var(--line);
-      box-shadow: var(--shadow);
-      border-radius: 28px;
-      padding: 24px;
-      backdrop-filter: blur(14px);
-      margin-bottom: 22px;
+      background:linear-gradient(135deg, rgba(255,255,255,.10), rgba(255,255,255,.05));
+      border:1px solid var(--line);
+      box-shadow:var(--shadow);
+      border-radius:28px;
+      padding:24px;
+      backdrop-filter:blur(14px);
+      margin-bottom:20px;
     }
 
     .title{
       margin:0;
-      font-size: clamp(28px, 4vw, 44px);
+      font-size:clamp(28px,4vw,42px);
       line-height:1.1;
     }
 
     .subtitle{
       margin:10px 0 0;
-      color: var(--muted);
-      font-size: 15px;
+      font-size:15px;
+      color:var(--muted);
     }
 
-    .rulebar{
+    .chips{
       display:flex;
       flex-wrap:wrap;
       gap:10px;
@@ -73,9 +74,9 @@
     }
 
     .chip{
-      background: rgba(255,255,255,.08);
       border:1px solid var(--line);
-      color: var(--text);
+      background:rgba(255,255,255,.08);
+      color:var(--text);
       border-radius:999px;
       padding:8px 12px;
       font-size:13px;
@@ -83,19 +84,19 @@
 
     .toolbar{
       display:flex;
-      flex-wrap:wrap;
-      align-items:center;
       justify-content:space-between;
+      align-items:center;
       gap:12px;
+      flex-wrap:wrap;
       margin-bottom:18px;
     }
 
-    .toolbar-left{
+    .toolbar-note{
       color:var(--muted);
       font-size:14px;
     }
 
-    .toolbar-right{
+    .toolbar-actions{
       display:flex;
       gap:10px;
       flex-wrap:wrap;
@@ -106,161 +107,159 @@
       cursor:pointer;
       border-radius:14px;
       padding:10px 14px;
-      font-weight:700;
       font-size:14px;
-      transition:.2s ease;
+      font-weight:700;
+      transition:.18s ease;
     }
 
-    button:hover{ transform: translateY(-1px); }
+    button:hover{ transform:translateY(-1px); }
 
     .btn-primary{
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
-      color:white;
-      box-shadow: 0 10px 24px rgba(110,168,255,.22);
+      background:linear-gradient(135deg,var(--accent),var(--accent2));
+      color:#fff;
+      box-shadow:0 10px 24px rgba(110,168,255,.22);
     }
 
     .btn-ghost{
-      background: rgba(255,255,255,.08);
+      background:rgba(255,255,255,.08);
       color:var(--text);
       border:1px solid var(--line);
     }
 
-    .board{
-      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.05));
-      border:1px solid var(--line);
-      box-shadow: var(--shadow);
-      border-radius: var(--radius);
-      overflow:hidden;
-      backdrop-filter: blur(14px);
+    .days{
+      display:grid;
+      grid-template-columns:repeat(auto-fit, minmax(260px, 1fr));
+      gap:18px;
     }
 
-    .board-head{
-      padding:18px;
+    .day-card{
+      background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
+      border:1px solid var(--line);
+      box-shadow:var(--shadow);
+      border-radius:24px;
+      padding:16px;
+      backdrop-filter:blur(14px);
+      min-height:300px;
+    }
+
+    .day-head{
+      margin-bottom:14px;
+      padding-bottom:12px;
       border-bottom:1px solid var(--line);
+    }
+
+    .day-title{
+      margin:0;
+      font-size:22px;
+    }
+
+    .day-sub{
+      margin-top:6px;
+      color:var(--muted);
+      font-size:13px;
+    }
+
+    .day-actions{
+      margin-top:12px;
       display:flex;
-      justify-content:space-between;
-      align-items:flex-start;
-      gap:14px;
+      gap:8px;
       flex-wrap:wrap;
     }
 
-    .board-title{
-      margin:0;
-      font-size:24px;
+    .slot-list{
+      display:flex;
+      flex-direction:column;
+      gap:12px;
     }
 
-    .board-sub{
-      margin-top:6px;
-      color:var(--muted);
-      font-size:14px;
-    }
-
-    .table-wrap{
-      overflow:auto;
-    }
-
-    table{
-      width:100%;
-      min-width:2200px;
-      border-collapse:separate;
-      border-spacing:0;
-    }
-
-    thead th{
-      position:sticky;
-      top:0;
-      z-index:3;
-      background: rgba(8,12,26,.96);
-      color:var(--text);
-      border-bottom:1px solid var(--line);
-      padding:14px 10px;
-      font-size:14px;
-      text-align:center;
-    }
-
-    tbody th.time-col{
-      position:sticky;
-      left:0;
-      z-index:2;
-      background: rgba(8,12,26,.98);
-      color:var(--muted);
-      min-width:94px;
-      width:94px;
-      padding:12px 8px;
-      border-right:1px solid var(--line);
-      border-bottom:1px solid var(--line);
-      font-size:13px;
-      text-align:center;
-    }
-
-    tbody td{
-      border-right:1px solid var(--line);
-      border-bottom:1px solid var(--line);
-      vertical-align:top;
-      background: rgba(255,255,255,.03);
-      padding:10px;
-      min-width:170px;
-    }
-
-    tbody tr:last-child td,
-    tbody tr:last-child th{
-      border-bottom:none;
-    }
-
-    tbody td:last-child,
-    thead th:last-child{
-      border-right:none;
+    .slot-card{
+      background:rgba(255,255,255,.06);
+      border:1px solid var(--line);
+      border-radius:18px;
+      padding:12px;
     }
 
     .slot-top{
       display:flex;
-      align-items:center;
       justify-content:space-between;
+      align-items:flex-start;
       gap:8px;
-      margin-bottom:8px;
+      margin-bottom:10px;
     }
 
-    .count{
-      font-size:12px;
+    .slot-time{
+      font-size:18px;
+      font-weight:800;
+      line-height:1.1;
+    }
+
+    .slot-instance{
+      margin-top:4px;
       color:var(--muted);
+      font-size:12px;
+    }
+
+    .slot-badges{
+      display:flex;
+      gap:6px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+
+    .badge{
+      border-radius:999px;
+      padding:5px 8px;
+      font-size:12px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.06);
+      color:var(--muted);
+    }
+
+    .status-ok{ color:var(--success); }
+    .status-warn{ color:var(--danger); }
+    .status-full{ color:var(--warn); }
+
+    .summary{
+      display:flex;
+      gap:6px;
+      flex-wrap:wrap;
+      margin-bottom:10px;
+    }
+
+    .summary-pill{
+      font-size:12px;
+      border-radius:999px;
+      padding:5px 8px;
       background:rgba(255,255,255,.06);
       border:1px solid var(--line);
-      padding:4px 8px;
-      border-radius:999px;
+      color:var(--muted);
     }
 
-    .status{
-      font-size:12px;
-      font-weight:700;
-    }
-
-    .status.ok{ color:var(--success); }
-    .status.warn{ color:var(--danger); }
-    .status.full{ color:var(--warn); }
+    .summary-pill strong{ color:var(--text); }
 
     .member-list{
       display:flex;
       flex-direction:column;
       gap:8px;
-      min-height:74px;
+      min-height:46px;
     }
 
     .member{
       display:flex;
-      align-items:center;
       justify-content:space-between;
+      align-items:center;
       gap:8px;
       padding:8px 10px;
       border-radius:14px;
-      background: rgba(255,255,255,.08);
+      background:rgba(255,255,255,.08);
       border:1px solid rgba(255,255,255,.08);
     }
 
     .member-left{
-      min-width:0;
       display:flex;
       align-items:center;
       gap:8px;
+      min-width:0;
     }
 
     .role-badge{
@@ -272,92 +271,79 @@
     }
 
     .role-dps{
-      background: rgba(96,165,250,.16);
-      color: var(--dps);
+      background:rgba(96,165,250,.16);
+      color:var(--dps);
       border:1px solid rgba(96,165,250,.28);
     }
-
     .role-tank{
-      background: rgba(245,158,11,.14);
-      color: var(--tank);
+      background:rgba(245,158,11,.14);
+      color:var(--tank);
       border:1px solid rgba(245,158,11,.28);
     }
-
     .role-heal{
-      background: rgba(34,197,94,.14);
-      color: var(--heal);
+      background:rgba(34,197,94,.14);
+      color:var(--heal);
       border:1px solid rgba(34,197,94,.28);
     }
 
     .member-name{
+      font-size:14px;
       overflow:hidden;
       text-overflow:ellipsis;
       white-space:nowrap;
-      font-size:14px;
     }
 
     .remove-btn{
-      border:none;
-      background: transparent;
-      color: var(--danger);
-      font-size:13px;
+      background:transparent;
+      color:var(--danger);
       padding:4px 6px;
-      cursor:pointer;
+      font-size:13px;
+      border:none;
       border-radius:10px;
     }
 
     .remove-btn:hover{
-      background: rgba(255,107,129,.12);
+      background:rgba(255,107,129,.12);
     }
 
-    .slot-actions{ margin-top:10px; }
+    .slot-actions{
+      display:flex;
+      gap:8px;
+      margin-top:10px;
+    }
 
-    .add-btn{
-      width:100%;
-      background: rgba(255,255,255,.06);
+    .add-btn, .clone-btn{
+      flex:1;
+      background:rgba(255,255,255,.06);
+      color:var(--text);
       border:1px dashed rgba(255,255,255,.18);
-      color: var(--text);
       padding:9px 10px;
       border-radius:14px;
       font-size:13px;
       font-weight:700;
     }
 
-    .add-btn:hover{ background: rgba(255,255,255,.1); }
-
     .add-btn:disabled{
-      opacity:.5;
+      opacity:.55;
       cursor:not-allowed;
     }
 
     .empty-note{
       color:var(--muted);
       font-size:13px;
-      padding:8px 4px 4px;
+      padding:6px 2px 2px;
     }
 
-    .summary{
-      display:flex;
-      gap:8px;
-      flex-wrap:wrap;
-      margin-top:8px;
-    }
-
-    .summary-pill{
-      font-size:12px;
-      border-radius:999px;
-      padding:5px 8px;
-      background: rgba(255,255,255,.06);
+    .small-note{
       color:var(--muted);
-      border:1px solid var(--line);
+      font-size:12px;
+      margin-top:10px;
     }
 
-    .summary-pill strong{ color:var(--text); }
-
-    @media (max-width: 768px){
-      body{ padding:16px 10px 36px; }
+    @media (max-width:768px){
+      body{ padding:16px 10px 30px; }
       .hero{ padding:18px; }
-      tbody td{ min-width:150px; }
+      .day-card{ padding:14px; }
     }
   </style>
 </head>
@@ -365,51 +351,48 @@
   <div class="container">
     <section class="hero">
       <h1 class="title">燕雲十六聲 夢回花深處俠境報名清單</h1>
-      <p class="subtitle">未來 14 天滾動表｜每 30 分鐘一個時段｜每時段最多 10 人｜最後 2 個位置若治療不足 2 人，則只能報名治療</p>
-      <div class="rulebar">
-        <span class="chip">職業：輸出 / 承傷 / 治療</span>
-        <span class="chip">每格最多 10 人</span>
-        <span class="chip">最後 2 格會保留治療需求</span>
-        <span class="chip">每天結束後自動移除過期日期</span>
-        <span class="chip">自動補新的一天到第 14 天</span>
+      <p class="subtitle">未來 5 天｜1 天 1 大卡｜時間段用小卡顯示｜時段滿員後自動開同時間第 2 卡｜使用者可自行新增時間</p>
+      <div class="chips">
+        <span class="chip">每時段最多 10 人</span>
+        <span class="chip">最後 2 個位置若治療不足 2 人，只能選治療</span>
+        <span class="chip">平日 19:45 預設開兩卡</span>
+        <span class="chip">平日 / 週末時間自動切換</span>
       </div>
     </section>
 
     <div class="toolbar">
-      <div class="toolbar-left">目前是前端版，資料存在瀏覽器。本頁重新開啟或自動檢查時，會整理過期日期並補齊未來 14 天。</div>
-      <div class="toolbar-right">
-        <button class="btn-ghost" id="clearExpired">整理日期</button>
-        <button class="btn-primary" id="clearAll">清空全部</button>
+      <div class="toolbar-note">目前是前端版，資料存在本機瀏覽器。版型確認後可再接 Firebase 做多人同步。</div>
+      <div class="toolbar-actions">
+        <button class="btn-ghost" id="refreshBtn">整理日期</button>
+        <button class="btn-primary" id="clearAllBtn">清空全部</button>
       </div>
     </div>
 
-    <div class="board">
-      <div class="board-head">
-        <div>
-          <h2 class="board-title">未來 14 天報名表</h2>
-          <div class="board-sub" id="boardRange"></div>
-        </div>
-      </div>
-      <div class="table-wrap">
-        <table>
-          <thead id="thead"></thead>
-          <tbody id="tbody"></tbody>
-        </table>
-      </div>
-    </div>
+    <div class="days" id="days"></div>
   </div>
 
   <script>
     const CONFIG = {
-      startHour: 10,
-      endHour: 22,
+      storageKey: "wwm_signup_5days_v1",
+      daysToShow: 5,
       maxPeople: 10,
       minHealer: 2,
-      daysToShow: 14,
-      storageKey: "wwm_signup_schedule_v3",
-      dayLabels: ["日","一","二","三","四","五","六"],
-      roles: ["輸出", "承傷", "治療"]
+      weekdayTimes: ["19:45","20:30","21:30","23:00","00:30","05:00"],
+      weekendTimes: ["12:00","14:00","16:00","18:00","21:30","23:30","05:00"],
+      roles: ["輸出","承傷","治療"]
     };
+
+    function getTodayStart(){
+      const d = new Date();
+      d.setHours(0,0,0,0);
+      return d;
+    }
+
+    function addDays(date, n){
+      const d = new Date(date);
+      d.setDate(d.getDate() + n);
+      return d;
+    }
 
     function pad(n){
       return String(n).padStart(2, "0");
@@ -423,31 +406,16 @@
       return `${date.getMonth()+1}/${date.getDate()}`;
     }
 
-    function addDays(date, days){
-      const d = new Date(date);
-      d.setHours(0,0,0,0);
-      d.setDate(d.getDate() + days);
-      return d;
+    function weekdayText(date){
+      return ["星期日","星期一","星期二","星期三","星期四","星期五","星期六"][date.getDay()];
     }
 
-    function getTodayStart(){
-      const d = new Date();
-      d.setHours(0,0,0,0);
-      return d;
+    function isWeekend(date){
+      return date.getDay() === 0 || date.getDay() === 6;
     }
 
-    function getDisplayDates(){
-      const today = getTodayStart();
-      return Array.from({ length: CONFIG.daysToShow }, (_, i) => addDays(today, i));
-    }
-
-    function getTimeSlots(){
-      const slots = [];
-      for(let h = CONFIG.startHour; h < CONFIG.endHour; h++){
-        slots.push(`${pad(h)}:00`);
-        slots.push(`${pad(h)}:30`);
-      }
-      return slots;
+    function getDefaultTimesForDate(date){
+      return isWeekend(date) ? [...CONFIG.weekendTimes] : [...CONFIG.weekdayTimes];
     }
 
     function loadData(){
@@ -462,8 +430,8 @@
       localStorage.setItem(CONFIG.storageKey, JSON.stringify(data));
     }
 
-    function cleanupExpiredDates(data){
-      const validDates = new Set(getDisplayDates().map(d => formatDate(d)));
+    function cleanupData(data){
+      const validDates = new Set(getDatesToShow().map(d => formatDate(d)));
       const cleaned = {};
       for(const dateKey in data){
         if(validDates.has(dateKey)){
@@ -473,39 +441,53 @@
       return cleaned;
     }
 
-    function ensureSlot(data, dateKey, timeKey){
-      if(!data[dateKey]) data[dateKey] = {};
-      if(!Array.isArray(data[dateKey][timeKey])) data[dateKey][timeKey] = [];
-      return data[dateKey][timeKey];
+    function getDatesToShow(){
+      const today = getTodayStart();
+      return Array.from({length: CONFIG.daysToShow}, (_, i) => addDays(today, i));
     }
 
-    function getSlotMembers(data, dateKey, timeKey){
-      return ensureSlot(data, dateKey, timeKey);
+    function ensureDate(data, dateKey, dateObj){
+      if(!data[dateKey]){
+        const defaultTimes = getDefaultTimesForDate(dateObj);
+        data[dateKey] = {
+          slots: []
+        };
+
+        defaultTimes.forEach(time => {
+          data[dateKey].slots.push({
+            time,
+            instance: 1,
+            members: []
+          });
+        });
+
+        if(!isWeekend(dateObj)){
+          data[dateKey].slots.push({
+            time: "19:45",
+            instance: 2,
+            members: []
+          });
+        }
+
+        sortSlots(data[dateKey].slots);
+      }
+
+      if(!Array.isArray(data[dateKey].slots)){
+        data[dateKey].slots = [];
+      }
+
+      return data[dateKey];
+    }
+
+    function sortSlots(slots){
+      slots.sort((a,b) => {
+        if(a.time === b.time) return a.instance - b.instance;
+        return a.time.localeCompare(b.time);
+      });
     }
 
     function countRole(members, role){
       return members.filter(m => m.role === role).length;
-    }
-
-    function getStatusText(members){
-      const total = members.length;
-      const healer = countRole(members, "治療");
-
-      if(total >= CONFIG.maxPeople){
-        return { text: "已滿", className: "full" };
-      }
-
-      if(healer < CONFIG.minHealer){
-        return { text: `治療不足 ${CONFIG.minHealer} 人`, className: "warn" };
-      }
-
-      return { text: "配置達標", className: "ok" };
-    }
-
-    function roleClass(role){
-      if(role === "輸出") return "role-dps";
-      if(role === "承傷") return "role-tank";
-      return "role-heal";
     }
 
     function getAllowedRoles(members){
@@ -515,56 +497,151 @@
       if(remaining <= 2 && healerCount < CONFIG.minHealer){
         return ["治療"];
       }
-
       return [...CONFIG.roles];
+    }
+
+    function getStatus(members){
+      if(members.length >= CONFIG.maxPeople){
+        return { text: "已滿", cls: "status-full" };
+      }
+
+      if(countRole(members, "治療") < CONFIG.minHealer){
+        return { text: "治療不足", cls: "status-warn" };
+      }
+
+      return { text: "配置達標", cls: "status-ok" };
+    }
+
+    function roleClass(role){
+      if(role === "輸出") return "role-dps";
+      if(role === "承傷") return "role-tank";
+      return "role-heal";
+    }
+
+    function escapeHtml(str){
+      return String(str)
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
     }
 
     function promptForSignup(allowedRoles){
       const name = prompt("請輸入角色名稱 / 玩家名稱");
       if(name === null) return null;
+
       const trimmedName = name.trim();
       if(!trimmedName){
         alert("名字不可留空。");
         return null;
       }
 
-      const role = prompt(
-        `請輸入職業：${allowedRoles.join(" / ")}`,
-        allowedRoles[0]
-      );
+      const role = prompt(`請輸入職業：${allowedRoles.join(" / ")}`, allowedRoles[0]);
       if(role === null) return null;
 
       const trimmedRole = role.trim();
       if(!allowedRoles.includes(trimmedRole)){
-        alert(`目前這個時段只能選：${allowedRoles.join("、")}`);
+        alert(`目前只能選：${allowedRoles.join("、")}`);
         return null;
       }
 
       return { name: trimmedName, role: trimmedRole };
     }
 
-    function addMember(dateKey, timeKey){
+    function addMember(dateKey, slotIndex){
       const data = loadData();
-      const members = getSlotMembers(data, dateKey, timeKey);
+      const dateObj = new Date(dateKey + "T00:00:00");
+      const dayData = ensureDate(data, dateKey, dateObj);
+      const slot = dayData.slots[slotIndex];
 
-      if(members.length >= CONFIG.maxPeople){
-        alert(`此時段已滿 ${CONFIG.maxPeople} 人。`);
+      if(slot.members.length >= CONFIG.maxPeople){
+        alert("此時段已滿。");
+        autoCreateNextSameTimeSlot(data, dateKey, slot.time);
+        saveData(data);
+        render();
         return;
       }
 
-      const allowedRoles = getAllowedRoles(members);
+      const allowedRoles = getAllowedRoles(slot.members);
       const entry = promptForSignup(allowedRoles);
       if(!entry) return;
 
-      members.push(entry);
+      slot.members.push(entry);
+
+      if(slot.members.length >= CONFIG.maxPeople){
+        autoCreateNextSameTimeSlot(data, dateKey, slot.time);
+      }
+
       saveData(data);
       render();
     }
 
-    function removeMember(dateKey, timeKey, index){
+    function autoCreateNextSameTimeSlot(data, dateKey, time){
+      const dateObj = new Date(dateKey + "T00:00:00");
+      const dayData = ensureDate(data, dateKey, dateObj);
+      const sameTimeSlots = dayData.slots.filter(s => s.time === time);
+      const hasOpenSlot = sameTimeSlots.some(s => s.members.length < CONFIG.maxPeople);
+
+      if(!hasOpenSlot){
+        const maxInstance = sameTimeSlots.reduce((max, s) => Math.max(max, s.instance || 1), 1);
+        dayData.slots.push({
+          time,
+          instance: maxInstance + 1,
+          members: []
+        });
+        sortSlots(dayData.slots);
+      }
+    }
+
+    function addCustomTime(dateKey){
       const data = loadData();
-      const members = getSlotMembers(data, dateKey, timeKey);
-      members.splice(index, 1);
+      const dateObj = new Date(dateKey + "T00:00:00");
+      const dayData = ensureDate(data, dateKey, dateObj);
+
+      const time = prompt("請輸入新時間（格式例如 19:45）");
+      if(time === null) return;
+
+      const trimmed = time.trim();
+      if(!/^\d{1,2}:\d{2}$/.test(trimmed)){
+        alert("時間格式不正確，請用 HH:MM，例如 19:45");
+        return;
+      }
+
+      const [h, m] = trimmed.split(":").map(Number);
+      if(h < 0 || h > 23 || m < 0 || m > 59){
+        alert("時間格式不正確。");
+        return;
+      }
+
+      const sameTimeSlots = dayData.slots.filter(s => s.time === trimmed);
+      const nextInstance = sameTimeSlots.length
+        ? Math.max(...sameTimeSlots.map(s => s.instance || 1)) + 1
+        : 1;
+
+      dayData.slots.push({
+        time: trimmed,
+        instance: nextInstance,
+        members: []
+      });
+
+      sortSlots(dayData.slots);
+      saveData(data);
+      render();
+    }
+
+    function removeMember(dateKey, slotIndex, memberIndex){
+      const data = loadData();
+      const dateObj = new Date(dateKey + "T00:00:00");
+      const dayData = ensureDate(data, dateKey, dateObj);
+      dayData.slots[slotIndex].members.splice(memberIndex, 1);
+      saveData(data);
+      render();
+    }
+
+    function cloneSameTimeSlot(dateKey, time){
+      const data = loadData();
+      autoCreateNextSameTimeSlot(data, dateKey, time);
       saveData(data);
       render();
     }
@@ -574,133 +651,126 @@
       render();
     }
 
-    function escapeHtml(str){
-      return String(str)
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#039;");
-    }
-
     function render(){
       let data = loadData();
-      data = cleanupExpiredDates(data);
+      data = cleanupData(data);
+
+      const dates = getDatesToShow();
+      dates.forEach(date => {
+        ensureDate(data, formatDate(date), date);
+      });
+
       saveData(data);
 
-      const dates = getDisplayDates();
-      const times = getTimeSlots();
+      const daysEl = document.getElementById("days");
+      let html = "";
 
-      document.getElementById("boardRange").textContent =
-        `${formatDate(dates[0])} ～ ${formatDate(dates[dates.length - 1])}`;
-
-      const thead = document.getElementById("thead");
-      const tbody = document.getElementById("tbody");
-
-      let headHtml = `<tr><th>時間</th>`;
       dates.forEach(date => {
-        headHtml += `
-          <th>
-            ${displayDate(date)}<br>
-            <span style="font-size:12px;color:#a8b3cf;font-weight:500;">
-              星期${CONFIG.dayLabels[date.getDay()]}
-            </span>
-          </th>
+        const dateKey = formatDate(date);
+        const dayData = data[dateKey];
+        const modeText = isWeekend(date) ? "週末時間表" : "平日時間表";
+
+        html += `
+          <section class="day-card">
+            <div class="day-head">
+              <h2 class="day-title">${displayDate(date)}</h2>
+              <div class="day-sub">${weekdayText(date)}｜${modeText}</div>
+              <div class="day-actions">
+                <button class="btn-ghost" onclick="addCustomTime('${dateKey}')">＋ 新增時間</button>
+              </div>
+            </div>
+            <div class="slot-list">
         `;
-      });
-      headHtml += `</tr>`;
-      thead.innerHTML = headHtml;
 
-      let bodyHtml = "";
-      times.forEach(timeKey => {
-        bodyHtml += `<tr><th class="time-col">${timeKey}</th>`;
-
-        dates.forEach(date => {
-          const dateKey = formatDate(date);
-          const members = getSlotMembers(data, dateKey, timeKey);
-          const healCount = countRole(members, "治療");
+        dayData.slots.forEach((slot, slotIndex) => {
+          const members = slot.members || [];
           const dpsCount = countRole(members, "輸出");
           const tankCount = countRole(members, "承傷");
-          const status = getStatusText(members);
+          const healCount = countRole(members, "治療");
+          const status = getStatus(members);
           const allowedRoles = getAllowedRoles(members);
           const forceHeal = allowedRoles.length === 1 && allowedRoles[0] === "治療";
 
-          bodyHtml += `<td>`;
-          bodyHtml += `
-            <div class="slot-top">
-              <span class="count">${members.length}/${CONFIG.maxPeople}</span>
-              <span class="status ${status.className}">
-                ${forceHeal && members.length < CONFIG.maxPeople ? "最後位置保留治療" : status.text}
-              </span>
-            </div>
+          html += `
+            <div class="slot-card">
+              <div class="slot-top">
+                <div>
+                  <div class="slot-time">${slot.time}</div>
+                  <div class="slot-instance">第 ${slot.instance || 1} 隊</div>
+                </div>
+                <div class="slot-badges">
+                  <span class="badge">${members.length}/${CONFIG.maxPeople}</span>
+                  <span class="badge ${status.cls}">
+                    ${forceHeal && members.length < CONFIG.maxPeople ? "最後位置保留治療" : status.text}
+                  </span>
+                </div>
+              </div>
+
+              <div class="summary">
+                <span class="summary-pill">輸出 <strong>${dpsCount}</strong></span>
+                <span class="summary-pill">承傷 <strong>${tankCount}</strong></span>
+                <span class="summary-pill">治療 <strong>${healCount}</strong></span>
+              </div>
+
+              <div class="member-list">
           `;
 
-          bodyHtml += `<div class="member-list">`;
           if(members.length === 0){
-            bodyHtml += `<div class="empty-note">尚未有人報名</div>`;
+            html += `<div class="empty-note">尚未有人報名</div>`;
           } else {
-            members.forEach((member, index) => {
-              bodyHtml += `
+            members.forEach((member, memberIndex) => {
+              html += `
                 <div class="member">
                   <div class="member-left">
                     <span class="role-badge ${roleClass(member.role)}">${member.role}</span>
                     <span class="member-name">${escapeHtml(member.name)}</span>
                   </div>
-                  <button class="remove-btn" onclick="removeMember('${dateKey}','${timeKey}',${index})">刪除</button>
+                  <button class="remove-btn" onclick="removeMember('${dateKey}', ${slotIndex}, ${memberIndex})">刪除</button>
                 </div>
               `;
             });
           }
-          bodyHtml += `</div>`;
 
-          bodyHtml += `
-            <div class="summary">
-              <span class="summary-pill">輸出 <strong>${dpsCount}</strong></span>
-              <span class="summary-pill">承傷 <strong>${tankCount}</strong></span>
-              <span class="summary-pill">治療 <strong>${healCount}</strong></span>
+          html += `
+              </div>
+
+              <div class="slot-actions">
+                <button class="add-btn" onclick="addMember('${dateKey}', ${slotIndex})" ${members.length >= CONFIG.maxPeople ? "disabled" : ""}>
+                  ${members.length >= CONFIG.maxPeople ? "此隊已滿" : forceHeal ? "＋ 僅限新增治療" : "＋ 新增報名"}
+                </button>
+                <button class="clone-btn" onclick="cloneSameTimeSlot('${dateKey}', '${slot.time}')">＋ 開同時間新隊</button>
+              </div>
             </div>
           `;
-
-          bodyHtml += `
-            <div class="slot-actions">
-              <button class="add-btn" onclick="addMember('${dateKey}','${timeKey}')" ${members.length >= CONFIG.maxPeople ? "disabled" : ""}>
-                ${members.length >= CONFIG.maxPeople
-                  ? "此時段已滿"
-                  : forceHeal
-                    ? "＋ 僅限新增治療"
-                    : "＋ 新增報名"}
-              </button>
-            </div>
-          `;
-
-          bodyHtml += `</td>`;
         });
 
-        bodyHtml += `</tr>`;
+        html += `
+            </div>
+          </section>
+        `;
       });
 
-      tbody.innerHTML = bodyHtml;
+      daysEl.innerHTML = html;
     }
 
     window.addMember = addMember;
     window.removeMember = removeMember;
+    window.addCustomTime = addCustomTime;
+    window.cloneSameTimeSlot = cloneSameTimeSlot;
 
-    document.getElementById("clearExpired").onclick = () => {
+    document.getElementById("refreshBtn").onclick = () => {
       render();
       alert("日期已整理完成。");
     };
 
-    document.getElementById("clearAll").onclick = () => {
+    document.getElementById("clearAllBtn").onclick = () => {
       if(confirm("確定清空全部資料？")){
         clearAll();
       }
     };
 
     render();
-
-    setInterval(() => {
-      render();
-    }, 60000);
+    setInterval(render, 60000);
   </script>
 </body>
 </html>
