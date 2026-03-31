@@ -40,7 +40,7 @@
     body{ padding:24px 14px 40px; }
 
     .container{
-      max-width:1400px;
+      max-width:1600px;
       margin:0 auto;
     }
 
@@ -91,11 +91,6 @@
       margin-bottom:18px;
     }
 
-    .toolbar-note{
-      color:var(--muted);
-      font-size:14px;
-    }
-
     .toolbar-actions{
       display:flex;
       gap:10px;
@@ -121,49 +116,55 @@
     }
 
     .days{
-      display:grid;
-      grid-template-columns:repeat(auto-fit, minmax(260px, 1fr));
+      display:flex;
+      flex-direction:column;
       gap:18px;
     }
 
     .day-card{
+      display:grid;
+      grid-template-columns: 260px minmax(0, 1fr);
+      gap:18px;
       background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
       border:1px solid var(--line);
       box-shadow:var(--shadow);
       border-radius:24px;
-      padding:16px;
+      padding:18px;
       backdrop-filter:blur(14px);
-      min-height:300px;
+      align-items:start;
     }
 
     .day-head{
-      margin-bottom:14px;
-      padding-bottom:12px;
-      border-bottom:1px solid var(--line);
+      position:sticky;
+      top:14px;
+      align-self:start;
+      padding-right:8px;
     }
 
     .day-title{
       margin:0;
-      font-size:22px;
+      font-size:28px;
+      line-height:1.1;
     }
 
     .day-sub{
-      margin-top:6px;
+      margin-top:8px;
       color:var(--muted);
-      font-size:13px;
+      font-size:14px;
     }
 
     .day-actions{
-      margin-top:12px;
+      margin-top:14px;
       display:flex;
       gap:8px;
       flex-wrap:wrap;
     }
 
     .slot-list{
-      display:flex;
-      flex-direction:column;
-      gap:12px;
+      display:grid;
+      grid-template-columns:repeat(auto-fill, minmax(250px, 1fr));
+      gap:14px;
+      min-width:0;
     }
 
     .slot-card{
@@ -171,6 +172,7 @@
       border:1px solid var(--line);
       border-radius:18px;
       padding:12px;
+      min-width:0;
     }
 
     .slot-top{
@@ -294,6 +296,7 @@
       font-size:13px;
       border:none;
       border-radius:10px;
+      flex:0 0 auto;
     }
 
     .remove-btn:hover{
@@ -304,10 +307,11 @@
       display:flex;
       gap:8px;
       margin-top:10px;
+      flex-wrap:wrap;
     }
 
-    .add-btn, .clone-btn{
-      flex:1;
+    .add-btn, .clone-btn, .delete-slot-btn{
+      flex:1 1 100px;
       background:rgba(255,255,255,.06);
       color:var(--text);
       border:1px dashed rgba(255,255,255,.18);
@@ -317,7 +321,14 @@
       font-weight:700;
     }
 
-    .add-btn:disabled{
+    .delete-slot-btn{
+      color:#ffb4c1;
+      border-color:rgba(255,107,129,.28);
+      background:rgba(255,107,129,.08);
+    }
+
+    .add-btn:disabled,
+    .delete-slot-btn:disabled{
       opacity:.55;
       cursor:not-allowed;
     }
@@ -334,10 +345,31 @@
       margin-top:10px;
     }
 
+    @media (max-width: 1100px){
+      .day-card{
+        grid-template-columns:1fr;
+      }
+
+      .day-head{
+        position:static;
+        padding-right:0;
+      }
+
+      .slot-list{
+        grid-template-columns:repeat(auto-fill, minmax(220px, 1fr));
+      }
+    }
+
     @media (max-width:768px){
       body{ padding:16px 10px 30px; }
       .hero{ padding:18px; }
       .day-card{ padding:14px; }
+      .slot-list{
+        grid-template-columns:1fr;
+      }
+      .day-title{
+        font-size:24px;
+      }
     }
   </style>
 </head>
@@ -349,6 +381,7 @@
       <div class="chips">
         <span class="chip">一隊最多10人</span>
         <span class="chip">每隊至少2個治療</span>
+        <span class="chip">可刪除自己新增的空白時間段</span>
       </div>
     </section>
 
@@ -367,10 +400,7 @@
       getFirestore,
       doc,
       getDoc,
-      getDocs,
       setDoc,
-      updateDoc,
-      deleteField,
       collection,
       onSnapshot
     } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
@@ -518,7 +548,8 @@
         slots.push({
           time,
           instance: 1,
-          members: []
+          members: [],
+          isCustom: false
         });
       });
 
@@ -526,7 +557,8 @@
         slots.push({
           time: "19:45",
           instance: 2,
-          members: []
+          members: [],
+          isCustom: false
         });
       }
 
@@ -539,12 +571,23 @@
       const snap = await getDoc(ref);
 
       if(!snap.exists()){
-        const newData = buildDefaultDayData(dateObj);
-        await setDoc(ref, newData);
+        await setDoc(ref, buildDefaultDayData(dateObj));
       } else {
         const data = snap.data();
         if(!data.slots || !Array.isArray(data.slots)){
           await setDoc(ref, buildDefaultDayData(dateObj));
+        } else {
+          let changed = false;
+          data.slots = data.slots.map(slot => {
+            if(typeof slot.isCustom === "undefined"){
+              changed = true;
+              return { ...slot, isCustom: false };
+            }
+            return slot;
+          });
+          if(changed){
+            await setDoc(ref, data);
+          }
         }
       }
     }
@@ -553,21 +596,6 @@
       const dates = getDatesToShow();
       for(const dateObj of dates){
         await ensureDateDoc(formatDate(dateObj), dateObj);
-      }
-    }
-
-    async function cleanupOldDatesInFirestore(){
-      const validDates = new Set(getDatesToShow().map(d => formatDate(d)));
-      const snap = await getDocs(collection(db, CONFIG.collectionName));
-
-      for(const item of snap.docs){
-        if(!validDates.has(item.id)){
-          await updateDoc(doc(db, CONFIG.collectionName, item.id), {
-            slots: deleteField()
-          }).catch(async () => {
-            await setDoc(doc(db, CONFIG.collectionName, item.id), {});
-          });
-        }
       }
     }
 
@@ -580,7 +608,8 @@
         dayData.slots.push({
           time,
           instance: maxInstance + 1,
-          members: []
+          members: [],
+          isCustom: true
         });
         sortSlots(dayData.slots);
       }
@@ -642,7 +671,8 @@
       dayData.slots.push({
         time: trimmed,
         instance: nextInstance,
-        members: []
+        members: [],
+        isCustom: true
       });
 
       sortSlots(dayData.slots);
@@ -674,9 +704,32 @@
       dayData.slots.push({
         time,
         instance: maxInstance + 1,
-        members: []
+        members: [],
+        isCustom: true
       });
 
+      sortSlots(dayData.slots);
+      await setDoc(doc(db, CONFIG.collectionName, dateKey), dayData);
+    }
+
+    async function deleteCustomSlot(dateKey, slotIndex){
+      const dayData = structuredClone(globalData[dateKey]);
+      if(!dayData || !Array.isArray(dayData.slots)) return;
+      const slot = dayData.slots[slotIndex];
+      if(!slot) return;
+
+      if(!slot.isCustom){
+        alert("固定時間段不能刪除。");
+        return;
+      }
+
+      const members = Array.isArray(slot.members) ? slot.members : [];
+      if(members.length > 0){
+        alert("這個時間段已有報名，不能刪除。");
+        return;
+      }
+
+      dayData.slots.splice(slotIndex, 1);
       sortSlots(dayData.slots);
       await setDoc(doc(db, CONFIG.collectionName, dateKey), dayData);
     }
@@ -715,13 +768,17 @@
             const status = getStatus(members);
             const allowedRoles = getAllowedRoles(members);
             const forceHeal = allowedRoles.length === 1 && allowedRoles[0] === "治療";
+            const canDeleteCustomSlot = !!slot.isCustom && members.length === 0;
 
             html += `
               <div class="slot-card">
                 <div class="slot-top">
                   <div>
                     <div class="slot-time">${slot.time}</div>
-                    <div class="slot-instance">第 ${slot.instance || 1} 隊</div>
+                    <div class="slot-instance">
+                      第 ${slot.instance || 1} 隊
+                      ${slot.isCustom ? "｜自訂" : "｜固定"}
+                    </div>
                   </div>
                   <div class="slot-badges">
                     <span class="badge">${members.length}/${CONFIG.maxPeople}</span>
@@ -763,7 +820,7 @@
                   <button class="add-btn" data-action="add-member" data-date="${dateKey}" data-slot="${slotIndex}" ${members.length >= CONFIG.maxPeople ? "disabled" : ""}>
                     ${members.length >= CONFIG.maxPeople ? "此隊已滿" : forceHeal ? "＋ 僅限新增治療" : "＋ 新增報名"}
                   </button>
-                  <button class="clone-btn" data-action="clone-slot" data-date="${dateKey}" data-time="${slot.time}">＋ 開同時間新隊</button>
+                  ` : ``}
                 </div>
               </div>
             `;
@@ -800,6 +857,13 @@
 
       document.querySelectorAll('[data-action="clone-slot"]').forEach(btn => {
         btn.onclick = () => cloneSameTimeSlot(btn.dataset.date, btn.dataset.time);
+      });
+
+      document.querySelectorAll('[data-action="delete-slot"]').forEach(btn => {
+        btn.onclick = () => deleteCustomSlot(
+          btn.dataset.date,
+          Number(btn.dataset.slot)
+        );
       });
     }
 
