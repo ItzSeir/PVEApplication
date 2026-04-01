@@ -325,7 +325,7 @@
 
     .portal-grid{
       display:grid;
-      grid-template-columns:repeat(auto-fit, minmax(260px, 1fr));
+      grid-template-columns:repeat(2, 1fr);
       gap:16px;
     }
 
@@ -437,7 +437,8 @@
     @media (max-width: 980px){
       .hero-grid,
       .cards-3,
-      .cards-2{
+      .cards-2,
+      .portal-grid{
         grid-template-columns:1fr;
       }
     }
@@ -472,7 +473,7 @@
 
       <div class="nav">
         <a href="#about">公會介紹</a>
-        <a href="#portal">俠境傳送門</a>
+        <a href="#portal">活動入口</a>
         <a href="#rules">公會規則</a>
       </div>
     </div>
@@ -488,13 +489,13 @@
         <div>
           <h1>這裡是我們在江湖中的落腳處。</h1>
           <p>
-            不論你是想找人一起俠境、百業、日常，還是只是想知道大家最近的活動方向，
-            都可以從這裡開始。首頁作為公會門面，整理我們的規則、活動入口與基本介紹，
-            讓每位同門都能更容易找到方向，也更容易一起同行。
+            不論你是想找人一起活動、清日常、參與公會安排，還是只是想看看最近有哪些事情可以一起做，
+            都可以從這裡開始。首頁作為公會門面，集中放置規則、活動入口與公會資訊，
+            讓每位同門都能更容易找到方向。
           </p>
 
           <div class="hero-actions">
-            <a href="#portal" class="btn btn-primary">前往俠境傳送門</a>
+            <a href="#portal" class="btn btn-primary">查看活動入口</a>
             <a href="#rules" class="btn btn-secondary">查看公會規則</a>
           </div>
         </div>
@@ -502,12 +503,12 @@
         <div class="hero-side">
           <div class="mini-panel">
             <div class="mini-title">公會定位</div>
-            <p class="mini-text">休閒但不散漫，認真但不壓迫，希望大家在這裡都能找到願意一起玩的夥伴。</p>
+            <p class="mini-text">休閒但不散漫，認真但不壓迫。希望大家在這裡都能找到願意一起玩的同伴。</p>
           </div>
 
           <div class="mini-panel">
             <div class="mini-title">首頁用途</div>
-            <p class="mini-text">集中展示公會規則、俠境入口與預留活動區塊，讓整體資訊更清楚、也更方便使用。</p>
+            <p class="mini-text">集中展示公會規則、活動入口與預留擴充區塊，讓資訊更清楚，也更方便使用。</p>
           </div>
         </div>
       </div>
@@ -532,35 +533,27 @@
     </section>
 
     <section class="section" id="portal">
-      <h2 class="section-title">俠境傳送門</h2>
+      <h2 class="section-title">活動入口</h2>
+
       <div class="portal-grid">
         <div class="portal-card">
-          <h3>俠境報名</h3>
+          <h3>俠境活動</h3>
           <p>
-            這裡可進入俠境活動報名頁，查看每日開團時段、目前隊伍配置與報名情況。
-            若要參與俠境，請由此進入。
+            目前常用活動入口之一。可在此查看開團時段、隊伍配置與報名情況。
+            若要參與近期安排，可由此進入。
           </p>
-          <div class="portal-actions">
-            <a href="PVERegistration.html" class="btn btn-primary">前往俠境報名</a>
-          </div>
-        </div>
 
-        <div class="portal-card">
-          <h3>俠境說明</h3>
-          <p>
-            俠境為公會常用活動之一。報名前請先確認可出席時間、欲使用職業與隊伍需求，
-            若臨時有事不能參加，也請提前告知，方便安排補位與調整。
-          </p>
           <div class="portal-actions">
-            <a href="PVERegistration" class="btn btn-secondary">查看報名頁</a>
+            <a href="PVERegistration.html" class="btn btn-primary">前往活動報名</a>
           </div>
         </div>
 
         <div class="portal-card">
           <h3>預留區塊</h3>
           <p>
-            此卡片預留給未來活動入口使用，例如百業活動、行俠任務、日常隊伍或特別公告。
+            此卡片預留給未來活動入口使用，例如百業活動、行俠任務或特別公告。
           </p>
+
           <div class="portal-actions">
             <a href="#" class="btn btn-secondary">尚未開放</a>
           </div>
@@ -569,8 +562,20 @@
         <div class="portal-card">
           <h3>預留區塊</h3>
           <p>
-            此卡片可放攻略入口、活動紀錄、成員名單、Discord 入口，或其他之後要補充的內容。
+            此卡片可放攻略入口、活動紀錄、成員名單、Discord 入口等。
           </p>
+
+          <div class="portal-actions">
+            <a href="#" class="btn btn-secondary">尚未開放</a>
+          </div>
+        </div>
+
+        <div class="portal-card">
+          <h3>預留區塊</h3>
+          <p>
+            未來擴展用，例如排行榜、歷史隊伍、滿隊紀錄等功能。
+          </p>
+
           <div class="portal-actions">
             <a href="#" class="btn btn-secondary">尚未開放</a>
           </div>
@@ -643,7 +648,7 @@
     </section>
 
     <div class="footer-note">
-      這裡是夢回公會首頁。活動安排與俠境報名請由「俠境傳送門」進入。
+      這裡是夢回公會首頁。活動安排與報名請由「活動入口」進入。
     </div>
   </div>
 </body>
