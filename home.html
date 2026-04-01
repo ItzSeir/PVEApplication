@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>燕雲十六聲｜首頁</title>
+  <style>
+    :root{
+      --bg:#0b1020;
+      --bg2:#131c35;
+      --panel:rgba(255,255,255,.08);
+      --line:rgba(255,255,255,.12);
+      --text:#eef2ff;
+      --muted:#a8b3cf;
+      --accent:#6ea8ff;
+      --accent2:#8b5cf6;
+      --success:#34d399;
+      --warn:#fbbf24;
+      --shadow:0 18px 40px rgba(0,0,0,.28);
+    }
+
+    *{ box-sizing:border-box; }
+
+    html,body{
+      margin:0;
+      padding:0;
+      font-family:system-ui,-apple-system,"Segoe UI","Noto Sans TC",Arial,sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(110,168,255,.18), transparent 28%),
+        radial-gradient(circle at top right, rgba(139,92,246,.16), transparent 24%),
+        linear-gradient(180deg, var(--bg), var(--bg2));
+    }
+
+    body{
+      min-height:100vh;
+      padding:24px 14px 40px;
+    }
+
+    .container{
+      max-width:1280px;
+      margin:0 auto;
+    }
+
+    .hero{
+      position:relative;
+      overflow:hidden;
+      background:linear-gradient(135deg, rgba(255,255,255,.10), rgba(255,255,255,.05));
+      border:1px solid var(--line);
+      border-radius:28px;
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(14px);
+      padding:34px 28px;
+      margin-bottom:22px;
+    }
+
+    .hero::before{
+      content:"";
+      position:absolute;
+      inset:auto -80px -80px auto;
+      width:240px;
+      height:240px;
+      border-radius:50%;
+      background:radial-gradient(circle, rgba(110,168,255,.28), transparent 70%);
+      pointer-events:none;
+    }
+
+    .badge-row{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-bottom:16px;
+    }
+
+    .badge{
+      padding:8px 12px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.06);
+      color:var(--text);
+      font-size:13px;
+    }
+
+    h1{
+      margin:0;
+      font-size:clamp(34px, 6vw, 58px);
+      line-height:1.05;
+    }
+
+    .subtitle{
+      margin:14px 0 0;
+      color:var(--muted);
+      font-size:16px;
+      max-width:760px;
+      line-height:1.8;
+    }
+
+    .hero-actions{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-top:24px;
+    }
+
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      text-decoration:none;
+      border-radius:16px;
+      padding:12px 18px;
+      font-size:14px;
+      font-weight:800;
+      transition:.18s ease;
+      border:1px solid transparent;
+    }
+
+    .btn:hover{
+      transform:translateY(-1px);
+    }
+
+    .btn-primary{
+      background:linear-gradient(135deg, var(--accent), var(--accent2));
+      color:white;
+      box-shadow:0 12px 28px rgba(110,168,255,.22);
+    }
+
+    .btn-secondary{
+      background:rgba(255,255,255,.08);
+      color:var(--text);
+      border-color:var(--line);
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(3, minmax(0,1fr));
+      gap:16px;
+      margin-bottom:22px;
+    }
+
+    .card{
+      background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
+      border:1px solid var(--line);
+      border-radius:22px;
+      padding:18px;
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(14px);
+    }
+
+    .card h3{
+      margin:0 0 10px;
+      font-size:18px;
+    }
+
+    .card p{
+      margin:0;
+      color:var(--muted);
+      line-height:1.75;
+      font-size:14px;
+    }
+
+    .two-col{
+      display:grid;
+      grid-template-columns:1.2fr .8fr;
+      gap:16px;
+    }
+
+    .list{
+      display:grid;
+      gap:10px;
+      margin-top:14px;
+    }
+
+    .list-item{
+      display:flex;
+      align-items:flex-start;
+      gap:10px;
+      padding:12px 14px;
+      border-radius:16px;
+      background:rgba(255,255,255,.05);
+      border:1px solid rgba(255,255,255,.08);
+    }
+
+    .dot{
+      width:10px;
+      height:10px;
+      border-radius:999px;
+      margin-top:6px;
+      flex:0 0 auto;
+      background:var(--accent);
+    }
+
+    .footer-note{
+      margin-top:18px;
+      text-align:center;
+      color:var(--muted);
+      font-size:13px;
+    }
+
+    @media (max-width: 980px){
+      .grid,
+      .two-col{
+        grid-template-columns:1fr;
+      }
+    }
+
+    @media (max-width: 768px){
+      body{
+        padding:16px 10px 30px;
+      }
+
+      .hero{
+        padding:22px 18px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <section class="hero">
+      <div class="badge-row">
+        <span class="badge">燕雲十六聲</span>
+        <span class="badge">夢回花深處俠境</span>
+        <span class="badge">筱風製作</span>
+      </div>
+
+      <h1>俠境報名首頁</h1>
+      <p class="subtitle">
+        這裡是隊伍報名與時段安排的入口頁面。你可以從這裡快速進入報名清單、查看組隊規則，
+        也能先了解目前系統的使用方式與隊伍配置說明。
+      </p>
+
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="index.html">進入報名清單</a>
+        <a class="btn btn-secondary" href="#rules">查看規則</a>
+      </div>
+    </section>
+
+    <section class="grid">
+      <div class="card">
+        <h3>快速報名</h3>
+        <p>直接進入每日時段卡片，查看目前人數、職業配置與剩餘位置，快速完成報名。</p>
+      </div>
+      <div class="card">
+        <h3>隊伍配置</h3>
+        <p>系統會依照隊伍狀況提示是否缺少治療位，幫助大家更快完成合理配置。</p>
+      </div>
+      <div class="card">
+        <h3>自訂時間</h3>
+        <p>除了固定時間段，也可以依需求新增自訂時段，讓排團更有彈性。</p>
+      </div>
+    </section>
+
+    <section class="two-col" id="rules">
+      <div class="card">
+        <h3>使用方式</h3>
+        <div class="list">
+          <div class="list-item">
+            <span class="dot"></span>
+            <div>先進入報名清單頁面，選擇你要參加的日期與時段。</div>
+          </div>
+          <div class="list-item">
+            <span class="dot"></span>
+            <div>點擊新增報名，填入名字並選擇職業。</div>
+          </div>
+          <div class="list-item">
+            <span class="dot"></span>
+            <div>若隊伍已滿，系統會自動顯示已滿狀態。</div>
+          </div>
+          <div class="list-item">
+            <span class="dot"></span>
+            <div>若你已報名，系統也可以高亮顯示你所在的隊伍。</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>隊伍規則</h3>
+        <div class="list">
+          <div class="list-item">
+            <span class="dot" style="background: var(--success);"></span>
+            <div>每隊最多 10 人</div>
+          </div>
+          <div class="list-item">
+            <span class="dot" style="background: var(--warn);"></span>
+            <div>每隊至少 2 個治療位</div>
+          </div>
+          <div class="list-item">
+            <span class="dot"></span>
+            <div>同一隊伍禁止相同名字重複報名</div>
+          </div>
+          <div class="list-item">
+            <span class="dot"></span>
+            <div>輸出/承傷 + 假奶 視為 1 個治療位</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="footer-note">
+      進入報名前，請先確認時段與職業選擇是否正確。
+    </div>
+  </div>
+</body>
+</html>
