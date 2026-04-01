@@ -359,7 +359,6 @@
       padding:6px 2px 2px;
     }
 
-    /* modal：只新增，不影響原本設計 */
     .signup-modal{
       position:fixed;
       inset:0;
@@ -398,8 +397,7 @@
       margin:10px 0 6px;
     }
 
-    .signup-input,
-    .signup-select{
+    .signup-input{
       width:100%;
       padding:12px 14px;
       border-radius:12px;
@@ -410,10 +408,91 @@
       outline:none;
     }
 
-    .signup-input:focus,
-    .signup-select:focus{
+    .signup-input:focus{
       border-color:rgba(110,168,255,.55);
       box-shadow:0 0 0 3px rgba(110,168,255,.14);
+    }
+
+    .custom-select{
+      position:relative;
+      user-select:none;
+    }
+
+    .custom-select-trigger{
+      width:100%;
+      padding:12px 42px 12px 14px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(255,255,255,.06);
+      color:var(--text);
+      font-size:14px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      cursor:pointer;
+      min-height:46px;
+    }
+
+    .custom-select-trigger:focus,
+    .custom-select.open .custom-select-trigger{
+      border-color:rgba(110,168,255,.55);
+      box-shadow:0 0 0 3px rgba(110,168,255,.14);
+      outline:none;
+    }
+
+    .custom-select-trigger::after{
+      content:"";
+      position:absolute;
+      right:14px;
+      top:50%;
+      width:8px;
+      height:8px;
+      border-right:2px solid #cbd5e1;
+      border-bottom:2px solid #cbd5e1;
+      transform:translateY(-60%) rotate(45deg);
+      transition:.18s ease;
+      pointer-events:none;
+    }
+
+    .custom-select.open .custom-select-trigger::after{
+      transform:translateY(-35%) rotate(-135deg);
+    }
+
+    .custom-select-menu{
+      position:absolute;
+      top:calc(100% + 8px);
+      left:0;
+      right:0;
+      background:linear-gradient(180deg, rgba(23,31,48,.98), rgba(16,23,38,.98));
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:14px;
+      padding:6px;
+      box-shadow:0 18px 40px rgba(0,0,0,.38);
+      display:none;
+      z-index:20;
+    }
+
+    .custom-select.open .custom-select-menu{
+      display:block;
+    }
+
+    .custom-select-option{
+      width:100%;
+      text-align:left;
+      background:transparent;
+      color:var(--text);
+      border:none;
+      border-radius:10px;
+      padding:10px 12px;
+      font-size:14px;
+      font-weight:700;
+      cursor:pointer;
+    }
+
+    .custom-select-option:hover,
+    .custom-select-option.active{
+      background:rgba(110,168,255,.18);
     }
 
     .signup-modal-actions{
@@ -499,8 +578,13 @@
       <label class="signup-label" for="playerName">名稱</label>
       <input id="playerName" class="signup-input" type="text" placeholder="請輸入名字" />
 
-      <label class="signup-label" for="roleSelect">職業</label>
-      <select id="roleSelect" class="signup-select"></select>
+      <label class="signup-label">職業</label>
+      <div id="roleSelect" class="custom-select">
+        <button type="button" id="roleSelectTrigger" class="custom-select-trigger" aria-haspopup="listbox" aria-expanded="false">
+          <span id="roleSelectLabel">請選擇職業</span>
+        </button>
+        <div id="roleSelectMenu" class="custom-select-menu" role="listbox" aria-label="職業選單"></div>
+      </div>
 
       <div class="signup-modal-actions">
         <button type="button" class="signup-confirm-btn" onclick="submitSignup()">確認</button>
@@ -550,6 +634,8 @@
       slotIndex: -1,
       allowedRoles: []
     };
+    let selectedRoleValue = "";
+    let customSelectBound = false;
 
     function getTodayStart(){
       const d = new Date();
@@ -713,22 +799,87 @@
       }
     }
 
+    function renderCustomRoleOptions(allowedRoles){
+      const menu = document.getElementById("roleSelectMenu");
+      const label = document.getElementById("roleSelectLabel");
+
+      menu.innerHTML = "";
+      selectedRoleValue = allowedRoles[0] || "";
+      label.textContent = selectedRoleValue || "請選擇職業";
+
+      allowedRoles.forEach(role => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "custom-select-option" + (role === selectedRoleValue ? " active" : "");
+        button.textContent = role;
+        button.dataset.value = role;
+        button.onclick = () => {
+          selectedRoleValue = role;
+          label.textContent = role;
+          menu.querySelectorAll(".custom-select-option").forEach(opt => {
+            opt.classList.toggle("active", opt.dataset.value === role);
+          });
+          closeCustomSelect();
+        };
+        menu.appendChild(button);
+      });
+    }
+
+    function openCustomSelect(){
+      const select = document.getElementById("roleSelect");
+      const trigger = document.getElementById("roleSelectTrigger");
+      select.classList.add("open");
+      trigger.setAttribute("aria-expanded", "true");
+    }
+
+    function closeCustomSelect(){
+      const select = document.getElementById("roleSelect");
+      const trigger = document.getElementById("roleSelectTrigger");
+      select.classList.remove("open");
+      trigger.setAttribute("aria-expanded", "false");
+    }
+
+    function bindCustomSelect(){
+      if(customSelectBound) return;
+      customSelectBound = true;
+
+      const trigger = document.getElementById("roleSelectTrigger");
+      const modal = document.getElementById("signupModal");
+
+      trigger.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const select = document.getElementById("roleSelect");
+        if(select.classList.contains("open")){
+          closeCustomSelect();
+        } else {
+          openCustomSelect();
+        }
+      });
+
+      document.addEventListener("click", (e) => {
+        const select = document.getElementById("roleSelect");
+        if(!select.contains(e.target)){
+          closeCustomSelect();
+        }
+      });
+
+      modal.addEventListener("click", (e) => {
+        if(e.target.id === "signupModal"){
+          closeModal();
+        }
+      });
+    }
+
     window.openModal = (dateKey, slotIndex, allowedRoles) => {
       currentSignup = { dateKey, slotIndex, allowedRoles };
 
       const modal = document.getElementById("signupModal");
       const nameInput = document.getElementById("playerName");
-      const roleSelect = document.getElementById("roleSelect");
 
       nameInput.value = localStorage.getItem("signup_player_name") || "";
-      roleSelect.innerHTML = "";
-
-      allowedRoles.forEach(role => {
-        const option = document.createElement("option");
-        option.value = role;
-        option.textContent = role;
-        roleSelect.appendChild(option);
-      });
+      renderCustomRoleOptions(allowedRoles);
+      closeCustomSelect();
+      bindCustomSelect();
 
       modal.classList.add("show");
 
@@ -740,18 +891,22 @@
 
     window.closeModal = () => {
       document.getElementById("signupModal").classList.remove("show");
+      closeCustomSelect();
     };
 
     window.submitSignup = async () => {
       const nameInput = document.getElementById("playerName");
-      const roleSelect = document.getElementById("roleSelect");
-
       const name = nameInput.value.trim();
-      const role = roleSelect.value;
+      const role = selectedRoleValue;
 
       if(!name){
         alert("名字不可留空。");
         nameInput.focus();
+        return;
+      }
+
+      if(!role){
+        alert("請選擇職業。");
         return;
       }
 
@@ -784,13 +939,12 @@
       }
 
       if(e.key === "Enter"){
+        const active = document.activeElement;
+        const isCustomOpen = document.getElementById("roleSelect").classList.contains("open");
+        if(active && active.closest("#roleSelect") && isCustomOpen){
+          return;
+        }
         submitSignup();
-      }
-    });
-
-    document.getElementById("signupModal").addEventListener("click", (e) => {
-      if(e.target.id === "signupModal"){
-        closeModal();
       }
     });
 
