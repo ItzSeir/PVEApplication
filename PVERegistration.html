@@ -630,6 +630,7 @@
 
     <div class="toolbar">
       <div class="toolbar-actions">
+        <button class="btn-ghost" id="infoBtn">Info</button>
         <button class="btn-ghost" id="refreshBtn">整理日期</button>
       </div>
     </div>
@@ -666,6 +667,50 @@
       <div class="confirm-modal-actions">
         <button type="button" class="confirm-cancel-btn" onclick="closeConfirmModal()">取消</button>
         <button type="button" class="confirm-danger-btn" onclick="confirmRemoveMember()">刪除</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="infoModal" class="confirm-modal">
+    <div class="confirm-modal-box">
+      <div class="confirm-modal-title">俠境報名說明</div>
+
+      <div class="confirm-modal-text" style="margin-bottom:0;">
+        <div style="display:grid; gap:12px;">
+          <div>
+            <strong style="color:var(--text);">報名前請注意</strong><br>
+            請先確認自己可出席的時間，再進行報名。
+          </div>
+
+          <div>
+            <strong style="color:var(--text);">隊伍規則</strong><br>
+            每隊最多 10 人，且至少需要 2 個治療位。
+          </div>
+
+          <div>
+            <strong style="color:var(--text);">職業說明</strong><br>
+            「輸出/承傷 + 假奶」會算作 1 個治療位。
+          </div>
+
+          <div>
+            <strong style="color:var(--text);">重複報名</strong><br>
+            同一隊伍內不能使用相同名字重複報名。
+          </div>
+
+          <div>
+            <strong style="color:var(--text);">臨時缺席</strong><br>
+            若臨時無法參加，請提早告知，方便安排補位與調整。
+          </div>
+
+          <div>
+            <strong style="color:var(--text);">推薦時段</strong><br>
+            平日 19:45 會標示為推薦時段。
+          </div>
+        </div>
+      </div>
+
+      <div class="confirm-modal-actions">
+        <button type="button" class="confirm-cancel-btn" onclick="closeInfoModal()">關閉</button>
       </div>
     </div>
   </div>
@@ -960,6 +1005,7 @@
       const trigger = document.getElementById("roleSelectTrigger");
       const signupModal = document.getElementById("signupModal");
       const confirmModal = document.getElementById("confirmModal");
+      const infoModal = document.getElementById("infoModal");
 
       trigger.addEventListener("click", (e) => {
         e.stopPropagation();
@@ -987,6 +1033,12 @@
       confirmModal.addEventListener("click", (e) => {
         if(e.target.id === "confirmModal"){
           closeConfirmModal();
+        }
+      });
+
+      infoModal.addEventListener("click", (e) => {
+        if(e.target.id === "infoModal"){
+          closeInfoModal();
         }
       });
     }
@@ -1098,9 +1150,18 @@
       closeConfirmModal();
     };
 
+    window.openInfoModal = () => {
+      document.getElementById("infoModal").classList.add("show");
+    };
+
+    window.closeInfoModal = () => {
+      document.getElementById("infoModal").classList.remove("show");
+    };
+
     document.addEventListener("keydown", (e) => {
       const signupModal = document.getElementById("signupModal");
       const confirmModal = document.getElementById("confirmModal");
+      const infoModal = document.getElementById("infoModal");
 
       if(signupModal.classList.contains("show")){
         if(e.key === "Escape"){
@@ -1119,6 +1180,10 @@
 
       if(confirmModal.classList.contains("show") && e.key === "Escape"){
         closeConfirmModal();
+      }
+
+      if(infoModal.classList.contains("show") && e.key === "Escape"){
+        closeInfoModal();
       }
     });
 
@@ -1231,7 +1296,6 @@
             const dpsCount = countRole(members, "輸出");
             const tankCount = countRole(members, "承傷");
             const healCount = countRole(members, "治療");
-            const fakeHealCount = members.filter(m => m.role === "輸出/承傷 + 假奶").length;
             const status = getStatus(members);
             const allowedRoles = getAllowedRoles(members);
             const forceHeal = allowedRoles.length > 0 && allowedRoles.every(role => role === "治療" || role === "輸出/承傷 + 假奶");
@@ -1346,6 +1410,10 @@
         );
       });
     }
+
+    document.getElementById("infoBtn").onclick = () => {
+      openInfoModal();
+    };
 
     document.getElementById("refreshBtn").onclick = async () => {
       await initializeVisibleDates();
