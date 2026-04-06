@@ -286,10 +286,29 @@
       min-height:46px;
     }
 
+    .member-group{
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+      margin-top:6px;
+    }
+
+    .member-group-title{
+      font-size:12px;
+      font-weight:800;
+      color:#d9e7ff;
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:999px;
+      padding:5px 10px;
+      align-self:flex-start;
+      margin-top:4px;
+    }
+
     .member{
       display:flex;
       justify-content:space-between;
-      align-items:center;
+      align-items:flex-start;
       gap:8px;
       padding:8px 10px;
       border-radius:14px;
@@ -305,9 +324,17 @@
 
     .member-left{
       display:flex;
-      align-items:center;
+      align-items:flex-start;
       gap:8px;
       min-width:0;
+      flex:1;
+    }
+
+    .member-text{
+      min-width:0;
+      display:flex;
+      flex-direction:column;
+      gap:4px;
     }
 
     .role-badge{
@@ -349,14 +376,45 @@
       white-space:nowrap;
     }
 
+    .member-note{
+      font-size:12px;
+      color:var(--muted);
+      line-height:1.5;
+      word-break:break-word;
+    }
+
+    .tag-pill{
+      display:inline-flex;
+      align-items:center;
+      gap:4px;
+      width:max-content;
+      max-width:100%;
+      font-size:11px;
+      font-weight:800;
+      border-radius:999px;
+      padding:4px 8px;
+      background:rgba(110,168,255,.12);
+      border:1px solid rgba(110,168,255,.24);
+      color:#d8e7ff;
+    }
+
     .member-self .member-name{
       color:#ffe8a6;
       font-weight:800;
     }
 
-    .remove-btn{
+    .member-actions{
+      display:flex;
+      gap:6px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+      flex:0 0 auto;
+    }
+
+    .remove-btn,
+    .tag-btn,
+    .move-btn{
       background:transparent;
-      color:var(--danger);
       padding:4px 6px;
       font-size:13px;
       border:none;
@@ -364,8 +422,20 @@
       flex:0 0 auto;
     }
 
+    .remove-btn{ color:var(--danger); }
+    .tag-btn{ color:#cfe0ff; }
+    .move-btn{ color:#b8f0ff; }
+
     .remove-btn:hover{
       background:rgba(255,107,129,.12);
+    }
+
+    .tag-btn:hover{
+      background:rgba(110,168,255,.12);
+    }
+
+    .move-btn:hover{
+      background:rgba(56,189,248,.12);
     }
 
     .slot-actions{
@@ -453,7 +523,9 @@
       margin:10px 0 6px;
     }
 
-    .signup-input{
+    .signup-input,
+    .signup-textarea,
+    .signup-select{
       width:100%;
       padding:12px 14px;
       border-radius:12px;
@@ -464,7 +536,19 @@
       outline:none;
     }
 
-    .signup-input:focus{
+    .signup-select option{
+      color:#111827;
+    }
+
+    .signup-textarea{
+      min-height:96px;
+      resize:vertical;
+      font-family:inherit;
+    }
+
+    .signup-input:focus,
+    .signup-textarea:focus,
+    .signup-select:focus{
       border-color:rgba(110,168,255,.55);
       box-shadow:0 0 0 3px rgba(110,168,255,.14);
     }
@@ -630,7 +714,7 @@
 
     <div class="toolbar">
       <div class="toolbar-actions">
-        <button class="btn-ghost" id="infoBtn">介紹</button>
+        <button class="btn-ghost" id="infoBtn">Info</button>
         <button class="btn-ghost" id="refreshBtn">整理日期</button>
       </div>
     </div>
@@ -678,6 +762,11 @@
       <div class="confirm-modal-text" style="margin-bottom:0;">
         <div style="display:grid; gap:12px;">
           <div>
+            <strong style="color:var(--text);">報名前請注意</strong><br>
+            請先確認自己可出席的時間，再進行報名。
+          </div>
+
+          <div>
             <strong style="color:var(--text);">隊伍規則</strong><br>
             每隊最多 10 人，且至少需要 2 個治療位。
           </div>
@@ -693,19 +782,64 @@
           </div>
 
           <div>
+            <strong style="color:var(--text);">機制標籤</strong><br>
+            可以幫隊員加上標籤與備註，例如主T、踩點、補位、引球等，系統會依標籤自動分類顯示。
+          </div>
+
+          <div>
+            <strong style="color:var(--text);">移動隊友</strong><br>
+            可把隊員移到同一天的其他隊伍，系統會自動檢查目標隊是否已滿或有重名。
+          </div>
+
+          <div>
             <strong style="color:var(--text);">臨時缺席</strong><br>
-            若臨時無法參加，可到此刪除你的名字。
+            若臨時無法參加，請提早告知，方便安排補位與調整。
           </div>
 
           <div>
             <strong style="color:var(--text);">推薦時段</strong><br>
-            平日 19:45（百業派對後）會標示為推薦時段。
+            平日 19:45 會標示為推薦時段。
           </div>
         </div>
       </div>
 
       <div class="confirm-modal-actions">
         <button type="button" class="confirm-cancel-btn" onclick="closeInfoModal()">關閉</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="tagModal" class="confirm-modal">
+    <div class="confirm-modal-box">
+      <div class="confirm-modal-title">編輯隊員標籤</div>
+
+      <label class="signup-label" for="tagInput">標籤</label>
+      <input id="tagInput" class="signup-input" type="text" placeholder="例如：主T / 踩點 / 補位" />
+
+      <label class="signup-label" for="noteInput">備註</label>
+      <textarea id="noteInput" class="signup-textarea" placeholder="例如：1號位、引球、先手開怪"></textarea>
+
+      <div class="confirm-modal-actions">
+        <button type="button" class="confirm-cancel-btn" onclick="closeTagModal()">取消</button>
+        <button type="button" class="signup-confirm-btn" onclick="saveMemberTag()">儲存</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="moveModal" class="confirm-modal">
+    <div class="confirm-modal-box">
+      <div class="confirm-modal-title">移動隊友</div>
+
+      <div id="moveMemberInfo" class="confirm-modal-text" style="margin-bottom:10px;">
+        請選擇要移動到哪個隊伍。
+      </div>
+
+      <label class="signup-label" for="moveTargetSelect">目標隊伍</label>
+      <select id="moveTargetSelect" class="signup-select"></select>
+
+      <div class="confirm-modal-actions">
+        <button type="button" class="confirm-cancel-btn" onclick="closeMoveModal()">取消</button>
+        <button type="button" class="signup-confirm-btn" onclick="confirmMoveMember()">確認移動</button>
       </div>
     </div>
   </div>
@@ -754,6 +888,8 @@
     let selectedRoleValue = "";
     let customSelectBound = false;
     let pendingDelete = null;
+    let currentTagEdit = null;
+    let currentMoveEdit = null;
 
     function getSavedPlayerName(){
       return (localStorage.getItem("signup_player_name") || "").trim();
@@ -917,12 +1053,28 @@
         } else {
           let changed = false;
           data.slots = data.slots.map(slot => {
-            if(typeof slot.isCustom === "undefined"){
+            const updatedSlot = {
+              ...slot,
+              isCustom: typeof slot.isCustom === "undefined" ? false : slot.isCustom,
+              members: Array.isArray(slot.members)
+                ? slot.members.map(member => ({
+                    ...member,
+                    tag: member.tag || "",
+                    note: member.note || ""
+                  }))
+                : []
+            };
+
+            if(
+              typeof slot.isCustom === "undefined" ||
+              (Array.isArray(slot.members) && slot.members.some(member => typeof member.tag === "undefined" || typeof member.note === "undefined"))
+            ){
               changed = true;
-              return { ...slot, isCustom: false };
             }
-            return slot;
+
+            return updatedSlot;
           });
+
           if(changed){
             await setDoc(ref, data);
           }
@@ -1001,6 +1153,8 @@
       const signupModal = document.getElementById("signupModal");
       const confirmModal = document.getElementById("confirmModal");
       const infoModal = document.getElementById("infoModal");
+      const tagModal = document.getElementById("tagModal");
+      const moveModal = document.getElementById("moveModal");
 
       trigger.addEventListener("click", (e) => {
         e.stopPropagation();
@@ -1034,6 +1188,18 @@
       infoModal.addEventListener("click", (e) => {
         if(e.target.id === "infoModal"){
           closeInfoModal();
+        }
+      });
+
+      tagModal.addEventListener("click", (e) => {
+        if(e.target.id === "tagModal"){
+          closeTagModal();
+        }
+      });
+
+      moveModal.addEventListener("click", (e) => {
+        if(e.target.id === "moveModal"){
+          closeMoveModal();
         }
       });
     }
@@ -1094,7 +1260,7 @@
         return;
       }
 
-      slot.members.push({ name, role });
+      slot.members.push({ name, role, tag: "", note: "" });
 
       if(slot.members.length >= CONFIG.maxPeople){
         autoCreateNextSameTimeSlot(dayData, slot.time);
@@ -1153,10 +1319,138 @@
       document.getElementById("infoModal").classList.remove("show");
     };
 
+    function openTagModal(dateKey, slotIndex, memberIndex){
+      const member = globalData?.[dateKey]?.slots?.[slotIndex]?.members?.[memberIndex];
+      if(!member) return;
+
+      currentTagEdit = { dateKey, slotIndex, memberIndex };
+      document.getElementById("tagInput").value = member.tag || "";
+      document.getElementById("noteInput").value = member.note || "";
+      document.getElementById("tagModal").classList.add("show");
+    }
+
+    window.closeTagModal = () => {
+      currentTagEdit = null;
+      document.getElementById("tagModal").classList.remove("show");
+    };
+
+    window.saveMemberTag = async () => {
+      if(!currentTagEdit) return;
+
+      const { dateKey, slotIndex, memberIndex } = currentTagEdit;
+      const tag = document.getElementById("tagInput").value.trim();
+      const note = document.getElementById("noteInput").value.trim();
+
+      const dayData = structuredClone(globalData[dateKey]);
+      if(!dayData || !Array.isArray(dayData.slots)) return;
+
+      const member = dayData?.slots?.[slotIndex]?.members?.[memberIndex];
+      if(!member) return;
+
+      member.tag = tag;
+      member.note = note;
+
+      await setDoc(doc(db, CONFIG.collectionName, dateKey), dayData);
+      closeTagModal();
+    };
+
+    function openMoveModal(dateKey, slotIndex, memberIndex){
+      const dayData = globalData?.[dateKey];
+      const member = dayData?.slots?.[slotIndex]?.members?.[memberIndex];
+      if(!dayData || !member) return;
+
+      currentMoveEdit = { dateKey, slotIndex, memberIndex };
+
+      const select = document.getElementById("moveTargetSelect");
+      const info = document.getElementById("moveMemberInfo");
+
+      info.innerHTML = `要移動的隊員：<strong style="color:var(--text);">${escapeHtml(member.name)}</strong>`;
+      select.innerHTML = "";
+
+      dayData.slots.forEach((slot, index) => {
+        if(index === slotIndex) return;
+
+        const option = document.createElement("option");
+        option.value = String(index);
+        option.textContent = `${slot.time}｜第 ${slot.instance || 1} 隊｜${(slot.members || []).length}/${CONFIG.maxPeople}`;
+        select.appendChild(option);
+      });
+
+      if(select.options.length === 0){
+        const option = document.createElement("option");
+        option.value = "";
+        option.textContent = "沒有可移動的其他隊伍";
+        select.appendChild(option);
+      }
+
+      document.getElementById("moveModal").classList.add("show");
+    }
+
+    window.closeMoveModal = () => {
+      currentMoveEdit = null;
+      document.getElementById("moveModal").classList.remove("show");
+    };
+
+    window.confirmMoveMember = async () => {
+      if(!currentMoveEdit) return;
+
+      const { dateKey, slotIndex, memberIndex } = currentMoveEdit;
+      const targetValue = document.getElementById("moveTargetSelect").value;
+
+      if(targetValue === ""){
+        closeMoveModal();
+        return;
+      }
+
+      const targetSlotIndex = Number(targetValue);
+      const dayData = structuredClone(globalData[dateKey]);
+      if(!dayData || !Array.isArray(dayData.slots)) return;
+
+      const sourceSlot = dayData.slots[slotIndex];
+      const targetSlot = dayData.slots[targetSlotIndex];
+      if(!sourceSlot || !targetSlot) return;
+
+      sourceSlot.members = Array.isArray(sourceSlot.members) ? sourceSlot.members : [];
+      targetSlot.members = Array.isArray(targetSlot.members) ? targetSlot.members : [];
+
+      const member = sourceSlot.members[memberIndex];
+      if(!member) return;
+
+      if(targetSlot.members.length >= CONFIG.maxPeople){
+        alert("目標隊伍已滿。");
+        return;
+      }
+
+      if(targetSlot.members.some(m => String(m.name).trim() === String(member.name).trim())){
+        alert("目標隊伍已有相同名字。");
+        return;
+      }
+
+      sourceSlot.members.splice(memberIndex, 1);
+      targetSlot.members.push(member);
+
+      await setDoc(doc(db, CONFIG.collectionName, dateKey), dayData);
+      closeMoveModal();
+    };
+
+    function groupMembersByTag(members){
+      const groups = {};
+
+      members.forEach((member, index) => {
+        const key = (member.tag || "").trim() || "未分類";
+        if(!groups[key]) groups[key] = [];
+        groups[key].push({ ...member, _index: index });
+      });
+
+      return groups;
+    }
+
     document.addEventListener("keydown", (e) => {
       const signupModal = document.getElementById("signupModal");
       const confirmModal = document.getElementById("confirmModal");
       const infoModal = document.getElementById("infoModal");
+      const tagModal = document.getElementById("tagModal");
+      const moveModal = document.getElementById("moveModal");
 
       if(signupModal.classList.contains("show")){
         if(e.key === "Escape"){
@@ -1179,6 +1473,14 @@
 
       if(infoModal.classList.contains("show") && e.key === "Escape"){
         closeInfoModal();
+      }
+
+      if(tagModal.classList.contains("show") && e.key === "Escape"){
+        closeTagModal();
+      }
+
+      if(moveModal.classList.contains("show") && e.key === "Escape"){
+        closeMoveModal();
       }
     });
 
@@ -1297,6 +1599,8 @@
             const canDeleteCustomSlot = !!slot.isCustom && members.length === 0;
             const isRecommended = !isWeekend(date) && slot.time === "19:45";
             const isMyTeam = !!savedName && members.some(m => String(m.name).trim() === savedName);
+            const groupedMembers = groupMembersByTag(members);
+            const groupNames = Object.keys(groupedMembers);
 
             const slotCardClass = members.length >= CONFIG.maxPeople
               ? `slot-card full-team${isMyTeam ? " my-team" : ""}`
@@ -1338,17 +1642,32 @@
             if(members.length === 0){
               html += `<div class="empty-note">尚未有人報名</div>`;
             } else {
-              members.forEach((member, memberIndex) => {
-                const isSelf = !!savedName && String(member.name).trim() === savedName;
-                html += `
-                  <div class="member${isSelf ? " member-self" : ""}">
-                    <div class="member-left">
-                      <span class="role-badge ${roleClass(member.role)}">${member.role}</span>
-                      <span class="member-name">${escapeHtml(member.name)}${isSelf ? "（你）" : ""}</span>
+              groupNames.forEach(groupName => {
+                html += `<div class="member-group">`;
+                html += `<div class="member-group-title">${escapeHtml(groupName)}</div>`;
+
+                groupedMembers[groupName].forEach(member => {
+                  const isSelf = !!savedName && String(member.name).trim() === savedName;
+                  html += `
+                    <div class="member${isSelf ? " member-self" : ""}">
+                      <div class="member-left">
+                        <span class="role-badge ${roleClass(member.role)}">${member.role}</span>
+                        <div class="member-text">
+                          <span class="member-name">${escapeHtml(member.name)}${isSelf ? "（你）" : ""}</span>
+                          ${member.tag ? `<span class="tag-pill">${escapeHtml(member.tag)}</span>` : ``}
+                          ${member.note ? `<span class="member-note">${escapeHtml(member.note)}</span>` : ``}
+                        </div>
+                      </div>
+                      <div class="member-actions">
+                        <button class="move-btn" data-action="move-member" data-date="${dateKey}" data-slot="${slotIndex}" data-member="${member._index}">移動</button>
+                        <button class="tag-btn" data-action="edit-member-tag" data-date="${dateKey}" data-slot="${slotIndex}" data-member="${member._index}">標籤</button>
+                        <button class="remove-btn" data-action="remove-member" data-date="${dateKey}" data-slot="${slotIndex}" data-member="${member._index}">刪除</button>
+                      </div>
                     </div>
-                    <button class="remove-btn" data-action="remove-member" data-date="${dateKey}" data-slot="${slotIndex}" data-member="${memberIndex}">刪除</button>
-                  </div>
-                `;
+                  `;
+                });
+
+                html += `</div>`;
               });
             }
 
@@ -1388,6 +1707,22 @@
 
       document.querySelectorAll('[data-action="add-member"]').forEach(btn => {
         btn.onclick = () => addMember(btn.dataset.date, Number(btn.dataset.slot));
+      });
+
+      document.querySelectorAll('[data-action="edit-member-tag"]').forEach(btn => {
+        btn.onclick = () => openTagModal(
+          btn.dataset.date,
+          Number(btn.dataset.slot),
+          Number(btn.dataset.member)
+        );
+      });
+
+      document.querySelectorAll('[data-action="move-member"]').forEach(btn => {
+        btn.onclick = () => openMoveModal(
+          btn.dataset.date,
+          Number(btn.dataset.slot),
+          Number(btn.dataset.member)
+        );
       });
 
       document.querySelectorAll('[data-action="remove-member"]').forEach(btn => {
