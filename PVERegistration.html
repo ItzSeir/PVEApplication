@@ -22,10 +22,10 @@
       --tank:#f59e0b;
       --dps:#60a5fa;
       --shadow:0 18px 40px rgba(0,0,0,.28);
-      --radius:22px;
     }
 
     *{ box-sizing:border-box; }
+
     html,body{
       margin:0;
       padding:0;
@@ -53,6 +53,29 @@
       backdrop-filter:blur(14px);
       margin-bottom:20px;
     }
+
+    .hero-top{
+      display:flex;
+      justify-content:flex-end;
+      margin-bottom:12px;
+    }
+
+    .top-link{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      text-decoration:none;
+      border-radius:14px;
+      padding:10px 14px;
+      font-size:14px;
+      font-weight:700;
+      transition:.18s ease;
+      background:rgba(255,255,255,.08);
+      color:var(--text);
+      border:1px solid var(--line);
+    }
+
+    .top-link:hover{ transform:translateY(-1px); }
 
     .title{
       margin:0;
@@ -123,7 +146,7 @@
 
     .day-card{
       display:grid;
-      grid-template-columns: 260px minmax(0, 1fr);
+      grid-template-columns:260px minmax(0, 1fr);
       gap:18px;
       background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
       border:1px solid var(--line);
@@ -306,90 +329,43 @@
     }
 
     .member{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:8px;
-  padding:8px 10px;
-  border-radius:14px;
-  background:rgba(255,255,255,.08);
-  border:1px solid rgba(255,255,255,.08);
-  min-height:54px;
-}
-
-.member-left{
-  display:flex;
-  align-items:center;
-  gap:8px;
-  min-width:0;
-  flex:1;
-}
-
-.member-text{
-  min-width:0;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  gap:4px;
-}
-
-.member-name{
-  display:block;
-  font-size:14px;
-  line-height:1.3;
-  overflow:hidden;
-  text-overflow:ellipsis;
-  white-space:nowrap;
-}
-    
-.member-menu{
-  position:relative;
-  flex:0 0 auto;
-  align-self:center;
-}
-
-.role-badge{
-  font-size:12px;
-  font-weight:800;
-  border-radius:999px;
-  padding:5px 8px;
-  white-space:nowrap;
-  line-height:1.2;
-}
-    .role-badge{
-      font-size:12px;
-      font-weight:800;
-      border-radius:999px;
-      padding:5px 8px;
-      white-space:nowrap;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:8px;
+      padding:8px 10px;
+      border-radius:14px;
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.08);
+      min-height:54px;
     }
 
-    .role-dps{
-      background:rgba(96,165,250,.16);
-      color:var(--dps);
-      border:1px solid rgba(96,165,250,.28);
+    .member.member-self{
+      background:rgba(255,215,106,.12);
+      border-color:rgba(255,215,106,.30);
+      box-shadow:0 0 0 2px rgba(255,215,106,.10) inset;
     }
 
-    .role-tank{
-      background:rgba(245,158,11,.14);
-      color:var(--tank);
-      border:1px solid rgba(245,158,11,.28);
+    .member-left{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      min-width:0;
+      flex:1;
     }
 
-    .role-heal{
-      background:rgba(34,197,94,.14);
-      color:var(--heal);
-      border:1px solid rgba(34,197,94,.28);
-    }
-
-    .role-fakeheal{
-      background:rgba(168,85,247,.16);
-      color:#c084fc;
-      border:1px solid rgba(168,85,247,.28);
+    .member-text{
+      min-width:0;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      gap:4px;
     }
 
     .member-name{
+      display:block;
       font-size:14px;
+      line-height:1.3;
       overflow:hidden;
       text-overflow:ellipsis;
       white-space:nowrap;
@@ -422,9 +398,44 @@
       font-weight:800;
     }
 
+    .role-badge{
+      font-size:12px;
+      font-weight:800;
+      border-radius:999px;
+      padding:5px 8px;
+      white-space:nowrap;
+      line-height:1.2;
+      flex:0 0 auto;
+    }
+
+    .role-dps{
+      background:rgba(96,165,250,.16);
+      color:var(--dps);
+      border:1px solid rgba(96,165,250,.28);
+    }
+
+    .role-tank{
+      background:rgba(245,158,11,.14);
+      color:var(--tank);
+      border:1px solid rgba(245,158,11,.28);
+    }
+
+    .role-heal{
+      background:rgba(34,197,94,.14);
+      color:var(--heal);
+      border:1px solid rgba(34,197,94,.28);
+    }
+
+    .role-fakeheal{
+      background:rgba(168,85,247,.16);
+      color:#c084fc;
+      border:1px solid rgba(168,85,247,.28);
+    }
+
     .member-menu{
       position:relative;
       flex:0 0 auto;
+      align-self:center;
     }
 
     .menu-trigger{
@@ -445,7 +456,7 @@
       position:absolute;
       right:0;
       top:calc(100% + 6px);
-      min-width:120px;
+      min-width:132px;
       background:linear-gradient(180deg, rgba(23,31,48,.98), rgba(16,23,38,.98));
       border:1px solid rgba(255,255,255,.10);
       border-radius:14px;
@@ -476,17 +487,9 @@
       background:rgba(255,255,255,.08);
     }
 
-    .member-menu-item.delete{
-      color:var(--danger);
-    }
-
-    .member-menu-item.move{
-      color:#b8f0ff;
-    }
-
-    .member-menu-item.tag{
-      color:#cfe0ff;
-    }
+    .member-menu-item.delete{ color:var(--danger); }
+    .member-menu-item.move{ color:#b8f0ff; }
+    .member-menu-item.tag{ color:#cfe0ff; }
 
     .slot-actions{
       display:flex;
@@ -495,7 +498,7 @@
       flex-wrap:wrap;
     }
 
-    .add-btn, .delete-slot-btn{
+    .add-btn,.delete-slot-btn{
       flex:1 1 100px;
       background:rgba(255,255,255,.06);
       color:var(--text);
@@ -622,6 +625,7 @@
       gap:12px;
       cursor:pointer;
       min-height:46px;
+      position:relative;
     }
 
     .custom-select-trigger:focus,
@@ -722,16 +726,14 @@
       background:linear-gradient(135deg, #ff6b81, #ef4444);
     }
 
-    @media (max-width: 1100px){
+    @media (max-width:1100px){
       .day-card{
         grid-template-columns:1fr;
       }
-
       .day-head{
         position:static;
         padding-right:0;
       }
-
       .slot-list{
         grid-template-columns:repeat(auto-fill, minmax(220px, 1fr));
       }
@@ -741,19 +743,19 @@
       body{ padding:16px 10px 30px; }
       .hero{ padding:18px; }
       .day-card{ padding:14px; }
-      .slot-list{
-        grid-template-columns:1fr;
-      }
-      .day-title{
-        font-size:24px;
-      }
+      .slot-list{ grid-template-columns:1fr; }
+      .day-title{ font-size:24px; }
     }
   </style>
 </head>
 <body>
   <div class="container">
     <section class="hero">
-      <h1 class="title">俠境報名清單</h1>
+      <div class="hero-top">
+        <a href="index.html" class="top-link">← 回到主頁</a>
+      </div>
+
+      <h1 class="title">夢回花深處｜俠境報名清單</h1>
       <p class="subtitle">目前進行測試中</p>
       <div class="chips">
         <span class="chip">筱風製作</span>
@@ -808,51 +810,18 @@
   <div id="infoModal" class="confirm-modal">
     <div class="confirm-modal-box">
       <div class="confirm-modal-title">俠境報名說明</div>
-
       <div class="confirm-modal-text" style="margin-bottom:0;">
         <div style="display:grid; gap:12px;">
-          <div>
-            <strong style="color:var(--text);">報名前請注意</strong><br>
-            請先確認自己可出席的時間，再進行報名。
-          </div>
-
-          <div>
-            <strong style="color:var(--text);">隊伍規則</strong><br>
-            每隊最多 10 人，且至少需要 2 個治療位。
-          </div>
-
-          <div>
-            <strong style="color:var(--text);">職業說明</strong><br>
-            「輸出/承傷 + 假奶」會算作 1 個治療位。
-          </div>
-
-          <div>
-            <strong style="color:var(--text);">重複報名</strong><br>
-            同一隊伍內不能使用相同名字重複報名。
-          </div>
-
-          <div>
-            <strong style="color:var(--text);">機制標籤</strong><br>
-            可以幫隊員加上標籤與備註，例如主T、踩點、補位、引球等，系統會依標籤自動分類顯示。
-          </div>
-
-          <div>
-            <strong style="color:var(--text);">移動隊友</strong><br>
-            可把隊員移到同一天的其他隊伍，或直接建立新隊伍並移入。
-          </div>
-
-          <div>
-            <strong style="color:var(--text);">臨時缺席</strong><br>
-            若臨時無法參加，請提早告知，方便安排補位與調整。
-          </div>
-
-          <div>
-            <strong style="color:var(--text);">推薦時段</strong><br>
-            平日 19:45 會標示為推薦時段。
-          </div>
+          <div><strong style="color:var(--text);">報名前請注意</strong><br>請先確認自己可出席的時間，再進行報名。</div>
+          <div><strong style="color:var(--text);">隊伍規則</strong><br>每隊最多 10 人，且至少需要 2 個治療位。</div>
+          <div><strong style="color:var(--text);">職業說明</strong><br>「輸出/承傷 + 假奶」會算作 1 個治療位。</div>
+          <div><strong style="color:var(--text);">重複報名</strong><br>同一隊伍內不能使用相同名字重複報名。</div>
+          <div><strong style="color:var(--text);">機制標籤</strong><br>可以幫隊員加上標籤與備註，例如主T、踩點、補位、引球等，系統會依標籤自動分類顯示。</div>
+          <div><strong style="color:var(--text);">移動隊友</strong><br>可把隊員移到同一天的其他隊伍，或直接建立新隊伍並移入。</div>
+          <div><strong style="color:var(--text);">臨時缺席</strong><br>若臨時無法參加，請提早告知，方便安排補位與調整。</div>
+          <div><strong style="color:var(--text);">推薦時段</strong><br>平日 19:45 會標示為推薦時段。</div>
         </div>
       </div>
-
       <div class="confirm-modal-actions">
         <button type="button" class="confirm-cancel-btn" onclick="closeInfoModal()">關閉</button>
       </div>
@@ -862,13 +831,10 @@
   <div id="tagModal" class="confirm-modal">
     <div class="confirm-modal-box">
       <div class="confirm-modal-title">編輯隊員標籤</div>
-
       <label class="signup-label" for="tagInput">標籤</label>
       <input id="tagInput" class="signup-input" type="text" placeholder="例如：主T / 踩點 / 補位" />
-
       <label class="signup-label" for="noteInput">備註</label>
       <textarea id="noteInput" class="signup-textarea" placeholder="例如：1號位、引球、先手開怪"></textarea>
-
       <div class="confirm-modal-actions">
         <button type="button" class="confirm-cancel-btn" onclick="closeTagModal()">取消</button>
         <button type="button" class="signup-confirm-btn" onclick="saveMemberTag()">儲存</button>
@@ -879,17 +845,30 @@
   <div id="moveModal" class="confirm-modal">
     <div class="confirm-modal-box">
       <div class="confirm-modal-title">移動隊友</div>
-
-      <div id="moveMemberInfo" class="confirm-modal-text" style="margin-bottom:10px;">
-        請選擇要移動到哪個隊伍。
-      </div>
-
+      <div id="moveMemberInfo" class="confirm-modal-text" style="margin-bottom:10px;">請選擇要移動到哪個隊伍。</div>
       <label class="signup-label" for="moveTargetSelect">目標隊伍</label>
       <select id="moveTargetSelect" class="signup-select"></select>
-
       <div class="confirm-modal-actions">
         <button type="button" class="confirm-cancel-btn" onclick="closeMoveModal()">取消</button>
         <button type="button" class="signup-confirm-btn" onclick="confirmMoveMember()">確認移動</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="editRoleModal" class="confirm-modal">
+    <div class="confirm-modal-box">
+      <div class="confirm-modal-title">編輯職業</div>
+      <div id="editRoleMemberInfo" class="confirm-modal-text" style="margin-bottom:10px;">請選擇新的職業。</div>
+      <label class="signup-label" for="editRoleSelect">職業</label>
+      <select id="editRoleSelect" class="signup-select">
+        <option value="輸出">輸出</option>
+        <option value="承傷">承傷</option>
+        <option value="治療">治療</option>
+        <option value="輸出/承傷 + 假奶">輸出/承傷 + 假奶</option>
+      </select>
+      <div class="confirm-modal-actions">
+        <button type="button" class="confirm-cancel-btn" onclick="closeEditRoleModal()">取消</button>
+        <button type="button" class="signup-confirm-btn" onclick="saveMemberRole()">儲存</button>
       </div>
     </div>
   </div>
@@ -930,16 +909,13 @@
 
     let globalData = {};
     let isRendering = false;
-    let currentSignup = {
-      dateKey: "",
-      slotIndex: -1,
-      allowedRoles: []
-    };
+    let currentSignup = { dateKey:"", slotIndex:-1, allowedRoles:[] };
     let selectedRoleValue = "";
     let customSelectBound = false;
     let pendingDelete = null;
     let currentTagEdit = null;
     let currentMoveEdit = null;
+    let currentRoleEdit = null;
 
     function getSavedPlayerName(){
       return (localStorage.getItem("signup_player_name") || "").trim();
@@ -984,31 +960,22 @@
     function getNextMonday(){
       const now = new Date();
       now.setHours(0,0,0,0);
-
       const day = now.getDay();
       const diff = (8 - day) % 7 || 7;
-
       const nextMonday = new Date(now);
       nextMonday.setDate(now.getDate() + diff);
       nextMonday.setHours(0,0,0,0);
-
       return nextMonday;
     }
 
     function getDatesToShow(){
       const today = getTodayStart();
       const dates = Array.from({length: CONFIG.daysToShow}, (_, i) => addDays(today, i));
-
       const nextMonday = getNextMonday();
       const nextMondayKey = formatDate(nextMonday);
-
       const alreadyIncluded = dates.some(d => formatDate(d) === nextMondayKey);
-
-      if(!alreadyIncluded){
-        dates.push(nextMonday);
-      }
-
-      dates.sort((a, b) => a - b);
+      if(!alreadyIncluded) dates.push(nextMonday);
+      dates.sort((a,b) => a - b);
       return dates;
     }
 
@@ -1021,9 +988,7 @@
 
     function countRole(members, role){
       if(role === "治療"){
-        return members.filter(m =>
-          m.role === "治療" || m.role === "輸出/承傷 + 假奶"
-        ).length;
+        return members.filter(m => m.role === "治療" || m.role === "輸出/承傷 + 假奶").length;
       }
       return members.filter(m => m.role === role).length;
     }
@@ -1031,7 +996,6 @@
     function getAllowedRoles(members){
       const healerCount = countRole(members, "治療");
       const remaining = CONFIG.maxPeople - members.length;
-
       if(remaining <= 2 && healerCount < CONFIG.minHealer){
         return ["治療","輸出/承傷 + 假奶"];
       }
@@ -1040,12 +1004,12 @@
 
     function getStatus(members){
       if(members.length >= CONFIG.maxPeople){
-        return { text: "已滿", cls: "status-full" };
+        return { text:"已滿", cls:"status-full" };
       }
       if(countRole(members, "治療") < CONFIG.minHealer){
-        return { text: "治療不足", cls: "status-warn" };
+        return { text:"治療不足", cls:"status-warn" };
       }
-      return { text: "配置達標", cls: "status-ok" };
+      return { text:"配置達標", cls:"status-ok" };
     }
 
     function roleClass(role){
@@ -1071,18 +1035,18 @@
       defaultTimes.forEach(time => {
         slots.push({
           time,
-          instance: 1,
-          members: [],
-          isCustom: false
+          instance:1,
+          members:[],
+          isCustom:false
         });
       });
 
       if(!isWeekend(dateObj)){
         slots.push({
-          time: "19:45",
-          instance: 2,
-          members: [],
-          isCustom: false
+          time:"19:45",
+          instance:2,
+          members:[],
+          isCustom:false
         });
       }
 
@@ -1147,9 +1111,9 @@
         const maxInstance = sameTimeSlots.reduce((max, s) => Math.max(max, s.instance || 1), 1);
         dayData.slots.push({
           time,
-          instance: maxInstance + 1,
-          members: [],
-          isCustom: true
+          instance:maxInstance + 1,
+          members:[],
+          isCustom:true
         });
         sortSlots(dayData.slots);
       }
@@ -1205,6 +1169,7 @@
       const infoModal = document.getElementById("infoModal");
       const tagModal = document.getElementById("tagModal");
       const moveModal = document.getElementById("moveModal");
+      const editRoleModal = document.getElementById("editRoleModal");
 
       trigger.addEventListener("click", (e) => {
         e.stopPropagation();
@@ -1221,48 +1186,40 @@
         if(!select.contains(e.target)){
           closeCustomSelect();
         }
-
-        document.querySelectorAll('.member-menu.open').forEach(menu => {
+        document.querySelectorAll(".member-menu.open").forEach(menu => {
           if(!menu.contains(e.target)){
-            menu.classList.remove('open');
+            menu.classList.remove("open");
           }
         });
       });
 
       signupModal.addEventListener("click", (e) => {
-        if(e.target.id === "signupModal"){
-          closeModal();
-        }
+        if(e.target.id === "signupModal") closeModal();
       });
 
       confirmModal.addEventListener("click", (e) => {
-        if(e.target.id === "confirmModal"){
-          closeConfirmModal();
-        }
+        if(e.target.id === "confirmModal") closeConfirmModal();
       });
 
       infoModal.addEventListener("click", (e) => {
-        if(e.target.id === "infoModal"){
-          closeInfoModal();
-        }
+        if(e.target.id === "infoModal") closeInfoModal();
       });
 
       tagModal.addEventListener("click", (e) => {
-        if(e.target.id === "tagModal"){
-          closeTagModal();
-        }
+        if(e.target.id === "tagModal") closeTagModal();
       });
 
       moveModal.addEventListener("click", (e) => {
-        if(e.target.id === "moveModal"){
-          closeMoveModal();
-        }
+        if(e.target.id === "moveModal") closeMoveModal();
+      });
+
+      editRoleModal.addEventListener("click", (e) => {
+        if(e.target.id === "editRoleModal") closeEditRoleModal();
       });
     }
 
     window.openModal = (dateKey, slotIndex, allowedRoles) => {
       currentSignup = { dateKey, slotIndex, allowedRoles };
-
       const modal = document.getElementById("signupModal");
       const nameInput = document.getElementById("playerName");
 
@@ -1272,7 +1229,6 @@
       bindCustomSelect();
 
       modal.classList.add("show");
-
       setTimeout(() => {
         nameInput.focus();
         nameInput.select();
@@ -1294,7 +1250,6 @@
         nameInput.focus();
         return;
       }
-
       if(!role){
         alert("請選擇職業。");
         return;
@@ -1316,7 +1271,7 @@
         return;
       }
 
-      slot.members.push({ name, role, tag: "", note: "" });
+      slot.members.push({ name, role, tag:"", note:"" });
 
       if(slot.members.length >= CONFIG.maxPeople){
         autoCreateNextSameTimeSlot(dayData, slot.time);
@@ -1430,7 +1385,6 @@
 
       dayData.slots.forEach((slot, index) => {
         if(index === slotIndex) return;
-
         const option = document.createElement("option");
         option.value = String(index);
         option.textContent = `${slot.time}｜第 ${slot.instance || 1} 隊｜${(slot.members || []).length}/${CONFIG.maxPeople}`;
@@ -1505,15 +1459,47 @@
       closeMoveModal();
     };
 
+    function openEditRoleModal(dateKey, slotIndex, memberIndex){
+      const member = globalData?.[dateKey]?.slots?.[slotIndex]?.members?.[memberIndex];
+      if(!member) return;
+
+      currentRoleEdit = { dateKey, slotIndex, memberIndex };
+      document.getElementById("editRoleMemberInfo").innerHTML =
+        `要編輯的隊員：<strong style="color:var(--text);">${escapeHtml(member.name)}</strong>`;
+      document.getElementById("editRoleSelect").value = member.role || "輸出";
+      document.getElementById("editRoleModal").classList.add("show");
+    }
+
+    window.closeEditRoleModal = () => {
+      currentRoleEdit = null;
+      document.getElementById("editRoleModal").classList.remove("show");
+    };
+
+    window.saveMemberRole = async () => {
+      if(!currentRoleEdit) return;
+
+      const { dateKey, slotIndex, memberIndex } = currentRoleEdit;
+      const newRole = document.getElementById("editRoleSelect").value;
+
+      const dayData = structuredClone(globalData[dateKey]);
+      if(!dayData || !Array.isArray(dayData.slots)) return;
+
+      const member = dayData?.slots?.[slotIndex]?.members?.[memberIndex];
+      if(!member) return;
+
+      member.role = newRole;
+
+      await setDoc(doc(db, CONFIG.collectionName, dateKey), dayData);
+      closeEditRoleModal();
+    };
+
     function groupMembersByTag(members){
       const groups = {};
-
       members.forEach((member, index) => {
         const key = (member.tag || "").trim() || "未分類";
         if(!groups[key]) groups[key] = [];
-        groups[key].push({ ...member, _index: index });
+        groups[key].push({ ...member, _index:index });
       });
-
       return groups;
     }
 
@@ -1523,37 +1509,23 @@
       const infoModal = document.getElementById("infoModal");
       const tagModal = document.getElementById("tagModal");
       const moveModal = document.getElementById("moveModal");
+      const editRoleModal = document.getElementById("editRoleModal");
 
       if(signupModal.classList.contains("show")){
-        if(e.key === "Escape"){
-          closeModal();
-        }
-
+        if(e.key === "Escape") closeModal();
         if(e.key === "Enter"){
           const active = document.activeElement;
           const isCustomOpen = document.getElementById("roleSelect").classList.contains("open");
-          if(active && active.closest("#roleSelect") && isCustomOpen){
-            return;
-          }
+          if(active && active.closest("#roleSelect") && isCustomOpen) return;
           submitSignup();
         }
       }
 
-      if(confirmModal.classList.contains("show") && e.key === "Escape"){
-        closeConfirmModal();
-      }
-
-      if(infoModal.classList.contains("show") && e.key === "Escape"){
-        closeInfoModal();
-      }
-
-      if(tagModal.classList.contains("show") && e.key === "Escape"){
-        closeTagModal();
-      }
-
-      if(moveModal.classList.contains("show") && e.key === "Escape"){
-        closeMoveModal();
-      }
+      if(confirmModal.classList.contains("show") && e.key === "Escape") closeConfirmModal();
+      if(infoModal.classList.contains("show") && e.key === "Escape") closeInfoModal();
+      if(tagModal.classList.contains("show") && e.key === "Escape") closeTagModal();
+      if(moveModal.classList.contains("show") && e.key === "Escape") closeMoveModal();
+      if(editRoleModal.classList.contains("show") && e.key === "Escape") closeEditRoleModal();
     });
 
     async function addMember(dateKey, slotIndex){
@@ -1720,6 +1692,7 @@
 
                 groupedMembers[groupName].forEach(member => {
                   const isSelf = !!savedName && String(member.name).trim() === savedName;
+
                   html += `
                     <div class="member${isSelf ? " member-self" : ""}">
                       <div class="member-left">
@@ -1730,10 +1703,12 @@
                           ${member.note ? `<span class="member-note">${escapeHtml(member.note)}</span>` : ``}
                         </div>
                       </div>
+
                       <div class="member-menu">
                         <button class="menu-trigger" data-action="toggle-member-menu">⋯</button>
                         <div class="member-menu-dropdown">
                           <button class="member-menu-item move" data-action="move-member" data-date="${dateKey}" data-slot="${slotIndex}" data-member="${member._index}">移動</button>
+                          <button class="member-menu-item tag" data-action="edit-member-role" data-date="${dateKey}" data-slot="${slotIndex}" data-member="${member._index}">編輯職業</button>
                           <button class="member-menu-item tag" data-action="edit-member-tag" data-date="${dateKey}" data-slot="${slotIndex}" data-member="${member._index}">標籤</button>
                           <button class="member-menu-item delete" data-action="remove-member" data-date="${dateKey}" data-slot="${slotIndex}" data-member="${member._index}">刪除</button>
                         </div>
@@ -1779,14 +1754,12 @@
       document.querySelectorAll('[data-action="toggle-member-menu"]').forEach(btn => {
         btn.onclick = (e) => {
           e.stopPropagation();
-
-          document.querySelectorAll('.member-menu.open').forEach(menu => {
-            if(menu !== btn.closest('.member-menu')){
-              menu.classList.remove('open');
+          document.querySelectorAll(".member-menu.open").forEach(menu => {
+            if(menu !== btn.closest(".member-menu")){
+              menu.classList.remove("open");
             }
           });
-
-          btn.closest('.member-menu').classList.toggle('open');
+          btn.closest(".member-menu").classList.toggle("open");
         };
       });
 
@@ -1798,9 +1771,20 @@
         btn.onclick = () => addMember(btn.dataset.date, Number(btn.dataset.slot));
       });
 
+      document.querySelectorAll('[data-action="edit-member-role"]').forEach(btn => {
+        btn.onclick = () => {
+          document.querySelectorAll(".member-menu.open").forEach(menu => menu.classList.remove("open"));
+          openEditRoleModal(
+            btn.dataset.date,
+            Number(btn.dataset.slot),
+            Number(btn.dataset.member)
+          );
+        };
+      });
+
       document.querySelectorAll('[data-action="edit-member-tag"]').forEach(btn => {
         btn.onclick = () => {
-          document.querySelectorAll('.member-menu.open').forEach(menu => menu.classList.remove('open'));
+          document.querySelectorAll(".member-menu.open").forEach(menu => menu.classList.remove("open"));
           openTagModal(
             btn.dataset.date,
             Number(btn.dataset.slot),
@@ -1811,7 +1795,7 @@
 
       document.querySelectorAll('[data-action="move-member"]').forEach(btn => {
         btn.onclick = () => {
-          document.querySelectorAll('.member-menu.open').forEach(menu => menu.classList.remove('open'));
+          document.querySelectorAll(".member-menu.open").forEach(menu => menu.classList.remove("open"));
           openMoveModal(
             btn.dataset.date,
             Number(btn.dataset.slot),
@@ -1822,7 +1806,7 @@
 
       document.querySelectorAll('[data-action="remove-member"]').forEach(btn => {
         btn.onclick = () => {
-          document.querySelectorAll('.member-menu.open').forEach(menu => menu.classList.remove('open'));
+          document.querySelectorAll(".member-menu.open").forEach(menu => menu.classList.remove("open"));
           openConfirmModal(
             btn.dataset.date,
             Number(btn.dataset.slot),
@@ -1878,6 +1862,7 @@
     });
 
     await initializeVisibleDates();
+    bindCustomSelect();
     render();
   </script>
 </body>
