@@ -947,7 +947,7 @@
         <div style="display:grid; gap:12px;">
           <div><strong style="color:var(--text);">報名前請注意</strong><br>請先確認自己可出席的時間，再進行報名。</div>
           <div><strong style="color:var(--text);">隊伍規則</strong><br>每隊最多 10 人，且至少需要 2 個治療位。</div>
-          <div><strong style="color:var(--text);">職業說明</strong><br>「輸出/承傷 + 假奶」會算作 1 個治療位。</div>
+          <div><strong style="color:var(--text);">職業說明</strong><br>「假奶」會算作 1 個治療位。</div>
           <div><strong style="color:var(--text);">重複報名</strong><br>同一隊伍內不能使用相同名字重複報名。</div>
           <div><strong style="color:var(--text);">我的資料</strong><br>你可以另存自己的名字與常用職業。之後表單會自動帶入，且 (你) 只會跟著這份資料，不會因為幫別人報名而跑掉。</div>
           <div><strong style="color:var(--text);">團類型</strong><br>每個隊伍都可以設定成普通團或天賦團。</div>
@@ -1009,7 +1009,7 @@
         <option value="輸出">輸出</option>
         <option value="承傷">承傷</option>
         <option value="治療">治療</option>
-        <option value="輸出/承傷 + 假奶">輸出/承傷 + 假奶</option>
+        <option value="假奶">假奶</option>
       </select>
 
       <div class="confirm-modal-actions">
@@ -1048,7 +1048,7 @@
         <option value="輸出">輸出</option>
         <option value="承傷">承傷</option>
         <option value="治療">治療</option>
-        <option value="輸出/承傷 + 假奶">輸出/承傷 + 假奶</option>
+        <option value="假奶">假奶</option>
       </select>
 
       <div class="confirm-modal-actions">
@@ -1088,7 +1088,7 @@
       minHealer: 2,
       weekdayTimes: ["19:45","20:30"],
       weekendTimes: ["16:00","21:30"],
-      roles: ["輸出","承傷","治療","輸出/承傷 + 假奶"],
+      roles: ["輸出","承傷","治療","假奶"],
       collectionName: "schedule"
     };
 
@@ -1194,7 +1194,7 @@
 
     function countRole(members, role){
       if(role === "治療"){
-        return members.filter(m => m.role === "治療" || m.role === "輸出/承傷 + 假奶").length;
+        return members.filter(m => m.role === "治療" || m.role === "假奶").length;
       }
       return members.filter(m => m.role === role).length;
     }
@@ -1203,7 +1203,7 @@
       const healerCount = countRole(members, "治療");
       const remaining = CONFIG.maxPeople - members.length;
       if(remaining <= 2 && healerCount < CONFIG.minHealer){
-        return ["治療","輸出/承傷 + 假奶"];
+        return ["治療","假奶"];
       }
       return [...CONFIG.roles];
     }
@@ -1213,15 +1213,15 @@
         return { text:"已滿", cls:"status-full" };
       }
       if(countRole(members, "治療") < CONFIG.minHealer){
-        return { text:"治療不足", cls:"status-warn" };
+        return { text:"缺奶", cls:"status-warn" };
       }
-      return { text:"配置達標", cls:"status-ok" };
+      return { text:"達標", cls:"status-ok" };
     }
 
     function roleClass(role){
       if(role === "輸出") return "role-dps";
       if(role === "承傷") return "role-tank";
-      if(role === "輸出/承傷 + 假奶") return "role-fakeheal";
+      if(role === "假奶") return "role-fakeheal";
       return "role-heal";
     }
 
@@ -1941,7 +1941,7 @@
             const healCount = countRole(members, "治療");
             const status = getStatus(members);
             const allowedRoles = getAllowedRoles(members);
-            const forceHeal = allowedRoles.length > 0 && allowedRoles.every(role => role === "治療" || role === "輸出/承傷 + 假奶");
+            const forceHeal = allowedRoles.length > 0 && allowedRoles.every(role => role === "治療" || role === "假奶");
             const canDeleteCustomSlot = !!slot.isCustom && members.length === 0;
             const isRecommended = !isWeekend(date) && slot.time === "19:45";
             const isMyTeam = !!savedName && members.some(m => String(m.name).trim() === savedName);
