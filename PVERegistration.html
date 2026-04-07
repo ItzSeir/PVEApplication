@@ -1240,19 +1240,20 @@
 
     function buildDefaultDayData(dateObj){
       const slots = [];
-      const defaultTimes = getDefaultTimesForDate(dateObj);
-
-      defaultTimes.forEach(time => {
+      const day = dateObj.getDay(); // 0=Sun, 1=Mon, ..., 6=Sat
+    
+      // 👉 星期一
+      if(day === 1){
+        // 19:45 第一隊
         slots.push({
-          time,
+          time:"19:45",
           instance:1,
           members:[],
           isCustom:false,
           teamType:"普通團"
         });
-      });
-
-      if(!isWeekend(dateObj)){
+    
+        // 19:45 第二隊
         slots.push({
           time:"19:45",
           instance:2,
@@ -1260,8 +1261,43 @@
           isCustom:false,
           teamType:"普通團"
         });
+    
+        // 20:30
+        slots.push({
+          time:"20:30",
+          instance:1,
+          members:[],
+          isCustom:false,
+          teamType:"普通團"
+        });
       }
-
+    
+      // 👉 星期二～星期五
+      else if(day >= 2 && day <= 5){
+        slots.push({
+          time:"19:45",
+          instance:1,
+          members:[],
+          isCustom:false,
+          teamType:"普通團"
+        });
+      }
+    
+      // 👉 週末（保留你原本）
+      else{
+        const defaultTimes = getDefaultTimesForDate(dateObj);
+    
+        defaultTimes.forEach(time => {
+          slots.push({
+            time,
+            instance:1,
+            members:[],
+            isCustom:false,
+            teamType:"普通團"
+          });
+        });
+      }
+    
       sortSlots(slots);
       return { slots };
     }
