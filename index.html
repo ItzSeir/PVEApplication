@@ -435,52 +435,84 @@
       line-height:1.85;
       font-size:14px;
     }
-/* 課表專用變數 */
-/* 課表專用變數 - 調整為柔和粉色與大地色 */
-      /* 活動配色方案 */
-      --color-party: rgba(200, 182, 175, 0.7); /* 百業派對 - 淺大地色 (保持柔和) */
-      --color-boss: rgba(219, 175, 175, 0.7);  /* 破軍殺將 - 霧粉色 */
-      --color-duel: rgba(168, 140, 190, 0.6);  /* 一決高下 - 紫粉色 (降低飽和度) */
-      --color-war: rgba(190, 160, 140, 0.7);   /* 百業戰 - 暖粉褐 */
-      --glass-border: rgba(255, 255, 255, 0.08);
+/* 課表專用變數 - 調低不透明度以符合半透明填充感 */
+    :root {
+      --color-party: rgba(168, 148, 140, 0.4); /* 半透明大地色 */
+      --color-boss: rgba(219, 175, 175, 0.35);  /* 半透明霧粉色 */
+      --color-duel: rgba(140, 158, 190, 0.35);  /* 半透明灰藍色 */
+      --color-war: rgba(168, 140, 190, 0.35);   /* 半透明淺紫色 */
     }
 
+    /* 讓背後的容器幾乎透明，只留下淡淡的邊框 */
     .schedule-container {
-      background: rgba(255, 255, 255, 0.04); /* 更透明的背景 */
-      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.01); 
+      border: 1px solid rgba(255, 255, 255, 0.08);
       border-radius: 24px;
       padding: 24px;
       overflow-x: auto;
-      backdrop-filter: blur(8px);
+      backdrop-filter: blur(4px); /* 輕微模糊，讓文字清晰 */
     }
 
-    .schedule-grid {
-      display: grid;
-      /* 時間欄 + 7天欄位 */
-      grid-template-columns: 80px repeat(7, minmax(130px, 1fr));
-      gap: 12px; /* 增加間距 */
-      min-width: 950px;
-    }
-
+    /* 週一至週日的表頭樣式 (恢復原本的獨立方塊感) */
     .grid-header {
       background: rgba(255, 255, 255, 0.08);
-      padding: 12px;
-      border-radius: 12px;
+      padding: 10px;
+      border-radius: 10px;
       text-align: center;
-      font-weight: 800;
-      color: var(--accent2); /* 霧粉色表頭文字 */
-      font-size: 15px;
+      font-weight: 700;
+      color: var(--text);
+      font-size: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
     }
 
+    /* 調整時間欄標記 */
     .time-col {
       display: flex;
       align-items: center;
       justify-content: center;
       color: var(--muted);
-      font-size: 14px;
-      font-weight: bold;
-      border-right: 1px solid rgba(255,255,255,0.08); /* 調整線條顏色 */
+      font-size: 13px;
+      font-weight: 500;
+      border: none; /* 移除邊框線讓背景更乾淨 */
     }
+
+    /* 百業派對條 - 半透明填充 */
+    .party-bar {
+      grid-column: 2 / 9;
+      background: var(--color-party) !important;
+      border-radius: 50px;
+      padding: 10px;
+      text-align: center;
+      font-weight: 800;
+      font-size: 14px;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      margin: 4px 0;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    /* 活動卡片 - 半透明填充 */
+    .event-card {
+      border-radius: 16px;
+      padding: 12px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-height: 64px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(2px);
+    }
+
+    .boss { background: var(--color-boss) !important; }
+    .duel { background: var(--color-duel) !important; }
+    .war  { background: var(--color-war) !important; }
+
+    .event-name { font-size: 14px; font-weight: 800; color: #fff; }
+    .event-time { font-size: 11px; color: rgba(255,255,255,0.7); margin-top: 2px; }
 
     /* 活動卡片通用樣式 */
     .event-card {
@@ -731,11 +763,11 @@
     </section>
 
 <section class="section" id="schedule">
-      <h2 class="section-title" style="color:var(--accent2);">百業週程表</h2>
+      <h2 class="section-title">百業週程表</h2>
       <div class="schedule-container">
         <div class="schedule-grid">
           
-          <div class="time-col">時間</div>
+          <div class="time-col" style="font-weight: 800;">Time</div>
           <div class="grid-header">週一</div>
           <div class="grid-header">週二</div>
           <div class="grid-header">週三</div>
@@ -770,6 +802,7 @@
           </div> <div></div> <div></div> </div>
       </div>
     </section>
+    
     <section class="section" id="portal">
       <h2 class="section-title">頁面入口</h2>
 
