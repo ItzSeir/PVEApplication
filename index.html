@@ -435,136 +435,108 @@
       line-height:1.85;
       font-size:14px;
     }
-/* 課表變數 */
-    :root {
-      --color-party: rgba(168, 148, 140, 0.4); 
-      --color-boss: rgba(135, 115, 115, 0.5);  
-      --color-duel: rgba(115, 120, 135, 0.45); 
-      --color-war: rgba(130, 115, 130, 0.45);  
-    }
+/* 顏色系統 */
+:root {
+  --color-party: rgba(255, 190, 120, 0.25);
+  --color-boss: rgba(255, 120, 120, 0.25);
+  --color-duel: rgba(120, 160, 255, 0.25);
+  --color-war: rgba(180, 120, 255, 0.25);
+}
 
-    .schedule-container {
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      border-radius: 28px;
-      padding: 28px;
-      backdrop-filter: blur(10px);
-      box-shadow: 0 10px 40px rgba(0,0,0,0.25);
-    }
-    }
+/* 容器 */
+.schedule-container {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 28px;
+  padding: 28px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 10px 40px rgba(0,0,0,0.25);
+  overflow-x: auto;
+}
 
-    .schedule-grid {
-      display: grid;
-      grid-template-columns: 80px repeat(7, 1fr);
-      /* 定義每一列的高度：表頭, 19點, 20點, 21點 */
-      grid-template-rows: auto 60px 100px 100px; 
-      gap: 12px;
-      align-items: stretch;
-    }
+/* Grid */
+.schedule-grid {
+  display: grid;
+  grid-template-columns: 80px repeat(7, 1fr);
+  grid-template-rows: auto 70px 120px 120px;
+  gap: 16px;
+}
 
-    .grid-header {
-      background: rgba(255, 255, 255, 0.06);
-      padding: 14px;
-      border-radius: 14px;
-      font-weight: 700;
-      font-size: 13px;
-      letter-spacing: 1px;
-      color: rgba(255,255,255,0.85);
-      border: 1px solid rgba(255, 255, 255, 0.04);
-      transition: all 0.2s ease;
-    }
-    
-    .grid-header:hover {
-      background: rgba(255,255,255,0.12);
-    }
+/* Header */
+.grid-header {
+  background: rgba(255, 255, 255, 0.06);
+  padding: 14px;
+  border-radius: 14px;
+  text-align: center;
+  font-weight: 700;
+  font-size: 13px;
+  color: rgba(255,255,255,0.85);
+}
 
-    .time-col {
-      font-size: 13px;
-      font-weight: 700;
-      color: rgba(255,255,255,0.5);
-      position: relative;
-    }
-    
-    /* 加時間線 */
-    .time-col::after {
-      content: "";
-      position: absolute;
-      right: -6px;
-      width: 1px;
-      height: 60%;
-      background: rgba(255,255,255,0.08);
-    }
+/* 時間欄 */
+.time-col {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+  color: rgba(255,255,255,0.5);
+  position: relative;
+}
 
-    .party-bar {
-      grid-column: 2 / 9;
-      background: linear-gradient(
-        90deg,
-        rgba(255, 200, 150, 0.25),
-        rgba(255, 150, 200, 0.25)
-      );
-      border-radius: 999px;
-      padding: 12px;
-      font-weight: 700;
-      font-size: 13px;
-      letter-spacing: 0.5px;
-      color: #fff;
-      border: 1px solid rgba(255,255,255,0.15);
-      backdrop-filter: blur(6px);
-    }
-    .event-card {
-      border-radius: 18px;
-      padding: 14px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      transition: all 0.25s ease;
-      cursor: pointer;
-      backdrop-filter: blur(4px);
-    }
-    
-    /* Hover 動效 */
-    .event-card:hover {
-      transform: translateY(-6px) scale(1.02);
-      box-shadow: 0 12px 30px rgba(0,0,0,0.35);
-    }
+/* 卡片 */
+.event-card {
+  border-radius: 18px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(255,255,255,0.08);
+  transition: all 0.25s ease;
+  cursor: pointer;
+}
 
-    :root {
-      --color-party: rgba(255, 180, 120, 0.25);
-      --color-boss: rgba(255, 120, 120, 0.25);
-      --color-duel: rgba(120, 160, 255, 0.25);
-      --color-war: rgba(180, 120, 255, 0.25);
-    }
-    .boss:hover { box-shadow: 0 0 20px rgba(255,120,120,0.4); }
-    .duel:hover { box-shadow: 0 0 20px rgba(120,160,255,0.4); }
-    .war:hover  { box-shadow: 0 0 20px rgba(180,120,255,0.4); }
+/* Hover */
+.event-card:hover {
+  transform: translateY(-6px) scale(1.03);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.35);
+}
 
-    .event-name {
-      font-size: 15px;
-      font-weight: 700;
-      margin-bottom: 6px;
-    }
-    
-    .event-time {
-      font-size: 12px;
-      color: rgba(255,255,255,0.6);
-    }
-    /* 跨兩小時高度設定 */
-    .span-2-hrs { grid-row: span 2; }
-    /* 活動卡片通用樣式 */
-    .event-card {
-      border-radius: 16px;
-      padding: 12px;
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.1); /* 更柔和的陰影 */
-      min-height: 60px;
-    }
+/* 類型顏色 */
+.party { background: var(--color-party); }
+.boss  { background: var(--color-boss); }
+.duel  { background: var(--color-duel); }
+.war   { background: var(--color-war); }
 
-    .event-name { font-size: 15px; font-weight: 800; margin-bottom: 2px; }
-    .event-time { font-size: 12px; opacity: 0.8; }
+/* 跨欄 / 跨列 */
+.span-all-days {
+  grid-column: 2 / 9;
+}
 
+.span-2-rows {
+  grid-row: span 2;
+}
+
+/* 文字 */
+.event-day {
+  font-size: 11px;
+  color: rgba(255,255,255,0.5);
+  margin-bottom: 4px;
+}
+
+.event-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 6px;
+}
+
+.event-time {
+  font-size: 12px;
+  color: rgba(255,255,255,0.65);
+}
     /* 特殊佈局 */
     .party-bar {
       grid-column: 2 / 9; /* 橫跨一到日 */
@@ -600,61 +572,7 @@
     .event-name { font-size: 15px; font-weight: 800; margin-bottom: 2px; }
     .event-time { font-size: 12px; opacity: 0.8; }
 
-    /* 特殊佈局 */
-    .party-bar {
-      grid-column: 2 / 9; /* 橫跨一到日 */
-      background: var(--color-party);
-      border-radius: 50px;
-      padding: 8px;
-      text-align: center;
-      font-weight: 800;
-      font-size: 14px;
-      margin: 4px 0;
-    }
-
-    /* 跨行(跨時間段)：破軍佔據 20:00 - 22:00 */
-    .span-2-hrs { grid-row: span 3; } 
-
-    .boss { background: var(--color-boss); }
-    .duel { background: var(--color-duel); }
-    .war  { background: var(--color-war); }
-
-    /* Event Tags */
-    .event-bar {
-      grid-column: 2 / 9; /* Spans across all days */
-      background: rgba(200, 182, 175, 0.6);
-      color: #fff;
-      padding: 6px;
-      border-radius: 99px;
-      text-align: center;
-      font-size: 13px;
-      font-weight: 700;
-      margin: 5px 0;
-    }
-
-    .event-card {
-      background: rgba(219, 175, 175, 0.5);
-      border-radius: 12px;
-      padding: 10px;
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
-    .event-card.alt {
-      background: rgba(168, 148, 140, 0.6);
-    }
-
-    .event-name {
-      font-size: 13px;
-      font-weight: 800;
-    }
-
-    .event-time {
-      font-size: 11px;
-      opacity: 0.9;
-    }
+  
     .guild-quote{
       position:relative;
       background:linear-gradient(135deg, rgba(255,255,255,.10), rgba(255,255,255,.05));
@@ -799,45 +717,78 @@
     </section>
 
 <section class="section" id="schedule">
-      <h2 class="section-title">百業週程表</h2>
-      <div class="schedule-container">
-        <div class="schedule-grid">
-          
-          <div class="time-col">Time</div>
-          <div class="grid-header">週一</div>
-          <div class="grid-header">週二</div>
-          <div class="grid-header">週三</div>
-          <div class="grid-header">週四</div>
-          <div class="grid-header">週五</div>
-          <div class="grid-header">週六</div>
-          <div class="grid-header">週日</div>
+  <h2 class="section-title">百業週程表</h2>
 
-          <div class="time-col">19:00</div>
-          <div class="party-bar">✨ 百業派對 (19:30 - 19:43)</div>
+  <div class="schedule-container">
+    <div class="schedule-grid">
 
-          <div class="time-col">20:00</div>
-          <div></div> <div class="event-card boss span-2-hrs">
-            <span class="event-name">破軍殺將</span>
-            <span class="event-time">20:00 - 22:00</span>
-          </div> <div></div> <div class="event-card boss span-2-hrs">
-            <span class="event-name">破軍殺將</span>
-            <span class="event-time">20:00 - 22:00</span>
-          </div> <div></div> <div class="event-card war">
-            <span class="event-name">百業戰</span>
-            <span class="event-time">20:30 - 21:05</span>
-          </div> <div class="event-card war">
-            <span class="event-name">百業戰</span>
-            <span class="event-time">20:30 - 21:05</span>
-          </div> <div class="time-col">21:00</div>
-          <div></div> <div class="event-card duel">
-            <span class="event-name">一決高下</span>
-            <span class="event-time">21:00 - 22:00</span>
-          </div> <div class="event-card duel">
-            <span class="event-name">一決高下</span>
-            <span class="event-time">21:00 - 22:00</span>
-          </div> <div></div> <div></div> </div>
+      <!-- Header -->
+      <div class="time-col">Time</div>
+      <div class="grid-header">週一</div>
+      <div class="grid-header">週二</div>
+      <div class="grid-header">週三</div>
+      <div class="grid-header">週四</div>
+      <div class="grid-header">週五</div>
+      <div class="grid-header">週六</div>
+      <div class="grid-header">週日</div>
+
+      <!-- 19:00 -->
+      <div class="time-col">19:00</div>
+
+      <div class="event-card party span-all-days">
+        <span class="event-name">百業派對</span>
+        <span class="event-time">每日 19:30 - 19:43</span>
       </div>
-    </section>
+
+      <!-- 20:00 -->
+      <div class="time-col">20:00</div>
+
+      <div></div>
+      <div class="event-card boss span-2-rows">
+        <span class="event-day">週二</span>
+        <span class="event-name">破軍殺將</span>
+        <span class="event-time">20:00 - 22:00</span>
+      </div>
+      <div></div>
+      <div class="event-card boss span-2-rows">
+        <span class="event-day">週四</span>
+        <span class="event-name">破軍殺將</span>
+        <span class="event-time">20:00 - 22:00</span>
+      </div>
+      <div></div>
+      <div class="event-card war">
+        <span class="event-day">週六</span>
+        <span class="event-name">百業戰</span>
+        <span class="event-time">20:30 - 21:05</span>
+      </div>
+      <div class="event-card war">
+        <span class="event-day">週日</span>
+        <span class="event-name">百業戰</span>
+        <span class="event-time">20:30 - 21:05</span>
+      </div>
+
+      <!-- 21:00 -->
+      <div class="time-col">21:00</div>
+
+      <div></div>
+      <div class="event-card duel">
+        <span class="event-day">週三</span>
+        <span class="event-name">一決高下</span>
+        <span class="event-time">21:00 - 22:00</span>
+      </div>
+      <div class="event-card duel">
+        <span class="event-day">週五</span>
+        <span class="event-name">一決高下</span>
+        <span class="event-time">21:00 - 22:00</span>
+      </div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+
+    </div>
+  </div>
+</section>
     
     <section class="section" id="portal">
       <h2 class="section-title">頁面入口</h2>
