@@ -435,48 +435,52 @@
       line-height:1.85;
       font-size:14px;
     }
-/* 課表專用變數 - 調低不透明度以符合半透明填充感 */
+/* 課表變數 */
     :root {
-      --color-party: rgba(168, 148, 140, 0.4); /* 半透明大地色 */
-      --color-boss: rgba(219, 175, 175, 0.35);  /* 半透明霧粉色 */
-      --color-duel: rgba(140, 158, 190, 0.35);  /* 半透明灰藍色 */
-      --color-war: rgba(168, 140, 190, 0.35);   /* 半透明淺紫色 */
+      --color-party: rgba(168, 148, 140, 0.4); 
+      --color-boss: rgba(135, 115, 115, 0.5);  
+      --color-duel: rgba(115, 120, 135, 0.45); 
+      --color-war: rgba(130, 115, 130, 0.45);  
     }
 
-    /* 讓背後的容器幾乎透明，只留下淡淡的邊框 */
     .schedule-container {
       background: rgba(255, 255, 255, 0.01); 
       border: 1px solid rgba(255, 255, 255, 0.08);
       border-radius: 24px;
       padding: 24px;
       overflow-x: auto;
-      backdrop-filter: blur(4px); /* 輕微模糊，讓文字清晰 */
+      backdrop-filter: blur(5px);
     }
 
-    /* 週一至週日的表頭樣式 (恢復原本的獨立方塊感) */
+    .schedule-grid {
+      display: grid;
+      grid-template-columns: 80px repeat(7, 1fr);
+      /* 定義每一列的高度：表頭, 19點, 20點, 21點 */
+      grid-template-rows: auto 60px 100px 100px; 
+      gap: 12px;
+      align-items: stretch;
+    }
+
     .grid-header {
       background: rgba(255, 255, 255, 0.08);
-      padding: 10px;
-      border-radius: 10px;
+      padding: 12px;
+      border-radius: 12px;
       text-align: center;
-      font-weight: 700;
+      font-weight: 800;
       color: var(--text);
       font-size: 14px;
       border: 1px solid rgba(255, 255, 255, 0.05);
     }
 
-    /* 調整時間欄標記 */
     .time-col {
       display: flex;
       align-items: center;
       justify-content: center;
       color: var(--muted);
-      font-size: 13px;
-      font-weight: 500;
-      border: none; /* 移除邊框線讓背景更乾淨 */
+      font-size: 14px;
+      font-weight: 800;
     }
 
-    /* 百業派對條 - 半透明填充 */
     .party-bar {
       grid-column: 2 / 9;
       background: var(--color-party) !important;
@@ -486,15 +490,10 @@
       font-weight: 800;
       font-size: 14px;
       color: #fff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      margin: 4px 0;
       border: 1px solid rgba(255, 255, 255, 0.1);
+      align-self: center;
     }
 
-    /* 活動卡片 - 半透明填充 */
     .event-card {
       border-radius: 16px;
       padding: 12px;
@@ -502,8 +501,7 @@
       display: flex;
       flex-direction: column;
       justify-content: center;
-      min-height: 64px;
-      border: 1px solid rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.1);
       backdrop-filter: blur(2px);
     }
 
@@ -511,9 +509,11 @@
     .duel { background: var(--color-duel) !important; }
     .war  { background: var(--color-war) !important; }
 
-    .event-name { font-size: 14px; font-weight: 800; color: #fff; }
-    .event-time { font-size: 11px; color: rgba(255,255,255,0.7); margin-top: 2px; }
+    .event-name { font-size: 15px; font-weight: 800; color: #fff; margin-bottom: 4px; }
+    .event-time { font-size: 12px; color: rgba(255,255,255,0.7); }
 
+    /* 跨兩小時高度設定 */
+    .span-2-hrs { grid-row: span 2; }
     /* 活動卡片通用樣式 */
     .event-card {
       border-radius: 16px;
@@ -767,7 +767,7 @@
       <div class="schedule-container">
         <div class="schedule-grid">
           
-          <div class="time-col" style="font-weight: 800;">Time</div>
+          <div class="time-col">Time</div>
           <div class="grid-header">週一</div>
           <div class="grid-header">週二</div>
           <div class="grid-header">週三</div>
