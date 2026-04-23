@@ -36,7 +36,92 @@
     }
 
     body{ padding:24px 14px 40px; }
+/* ===== 統一 Navbar 樣式 ===== */
+    .topbar {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: calc(100% - 40px);
+      max-width: 1100px;
+      height: 64px;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      padding: 0 12px;
+      border-radius: 999px;
+      background: rgba(15, 22, 42, 0.6);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255,255,255,0.1);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      transition: .3s;
+    }
 
+    .topbar.scrolled {
+      top: 10px;
+      background: rgba(10,15,30,0.85);
+    }
+
+    .topbar-content {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .brand-group {
+      display: flex;
+      gap: 8px;
+    }
+
+    .brand-badge {
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .brand-badge.sub { color: var(--gold); }
+
+    .nav { display: flex; gap: 8px; }
+
+    .nav a {
+      text-decoration: none;
+      color: var(--muted);
+      padding: 8px 18px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 600;
+      transition: all 0.25s ease;
+    }
+
+    .nav a:hover { color: var(--text); background: rgba(255,255,255,0.08); }
+
+    .nav a.home-btn {
+      color: #fff;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      box-shadow: 0 4px 15px rgba(110,168,255,0.4);
+      font-weight: 700;
+    }
+
+    .nav a.active:not(.home-btn) {
+      color: #fff;
+      background: rgba(255,255,255,0.12);
+    }
+
+    /* 調整主容器頂部間距以適應固定導航 */
+    body { padding-top: 100px; }
+
+    /* 手機版適配 */
+    @media (max-width: 768px) {
+      .topbar { top: 10px; height: auto; padding: 8px 16px; flex-direction: column; border-radius: 24px; }
+      .topbar-content { flex-direction: column; gap: 8px; }
+      .nav { width: 100%; justify-content: center; flex-wrap: wrap; }
+      .nav a { padding: 6px 12px; font-size: 11px; }
+      body { padding-top: 140px; }
+    }
     .container{
       max-width:1600px;
       margin:0 auto;
@@ -993,12 +1078,21 @@
 <body>
   <div class="container">
     <section class="hero">
-      <div class="hero-top">
-        <a href="index.html" class="top-link">← 回到主頁</a>
-        <div class="hero-actions">
-          <button class="top-btn" id="myProfileBtn">我的資料</button>
-        </div>
-      </div>
+<nav class="topbar" id="floatingNav">
+  <div class="topbar-content">
+    <div class="brand-group">
+      <span class="brand-badge">夢回花深處</span>
+      <span class="brand-badge sub">俠境報名</span>
+    </div>
+
+    <div class="nav">
+      <a href="index.html" class="home-btn">首頁</a>
+      <a href="PveRegistration.html" id="nav-pve">俠境報名</a>
+      <a href="gallery.html" id="nav-gallery">江湖回憶錄</a>
+      <a href="#" id="myProfileBtn" style="background:rgba(255,255,255,0.06); color:var(--gold);">我的資料</a>
+    </div>
+  </div>
+</nav>
 
       <h1 class="title">夢回花深處｜俠境報名清單</h1>
       <p class="subtitle">目前進行測試中</p>
@@ -1209,7 +1303,21 @@
       collection,
       onSnapshot
     } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+/* Navbar 滾動效果 */
+    const floatingNav = document.getElementById('floatingNav');
+    window.addEventListener('scroll', () => {
+      floatingNav.classList.toggle('scrolled', window.scrollY > 50);
+    });
 
+    /* 設定當前頁面高亮 */
+    const pveNavLink = document.getElementById('nav-pve');
+    if(pveNavLink) pveNavLink.classList.add('active');
+
+    /* 重新綁定「我的資料」按鈕 */
+    document.getElementById("myProfileBtn").onclick = (e) => {
+      e.preventDefault();
+      openMyProfileModal();
+    };
     const firebaseConfig = {
       apiKey: "AIzaSyD3NalXMRjiag_26-g82UtxeDvuSjydg30",
       authDomain: "pve-ab4a8.firebaseapp.com",
