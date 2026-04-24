@@ -138,71 +138,49 @@
   background: rgba(255,255,255,0.12);
 }
 /* ===== 手機版優化核心 ===== */
+/* ===== 手機版精準適配 (同步江湖回憶錄 1:1 風格) ===== */
 @media (max-width: 768px) {
-  /* 1. 調整 Navbar 整體高度與外距 */
+  body { padding-top: 150px !important; }
+
   .topbar {
     top: 10px;
-    height: auto; /* 讓高度隨內容伸縮 */
-    padding: 8px 16px;
-    width: calc(100% - 20px); /* 左右留窄邊，視覺更輕盈 */
-    border-radius: 24px; /* 稍微減少圓角以節省空間 */
+    height: auto;
+    padding: 10px 16px;
+    width: calc(100% - 20px);
+    border-radius: 24px;
+    z-index: 9999;
   }
 
-  .topbar-content {
-    flex-direction: column; /* 改為上下排列 */
-    gap: 8px;
+  .topbar-content { flex-direction: column; gap: 8px; }
+
+  /* 核心修正：移除 transform: scale 確保文字粗細(bold)與邊框不變細 */
+  .brand-group { 
+    justify-content: center; 
+    transform: none !important; 
   }
 
-  /* 2. 標誌縮小並置中 */
-  .brand-group {
-    justify-content: center;
-    transform: scale(0.9); /* 整體縮小 10% */
-  }
-
-  /* 3. 導航按鈕優化 */
   .nav {
     width: 100%;
-    justify-content: center;
-    /* 這裡使用 Flex 讓按鈕平均分配，或者允許換行 */
-    flex-wrap: wrap; 
+    justify-content: flex-start;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 5px 0;
     gap: 4px;
-    padding-bottom: 4px;
   }
+  .nav::-webkit-scrollbar { display: none; }
 
+  /* 核心修正：強制統一按鈕內距、字體與粗細 */
   .nav a {
-    padding: 6px 12px; /* 縮小按鈕內距 */
-    font-size: 11px; /* 縮小字體 */
-    white-space: nowrap; /* 防止文字斷行 */
+    padding: 6px 12px !important; /* 精確控制按鈕大小 */
+    font-size: 11px !important; 
+    font-weight: 700 !important; /* 確保加粗程度一致 */
+    white-space: nowrap;
   }
 
-  /* 4. 首頁按鈕特別處理，讓它在手機上也顯眼但不佔位 */
+  /* 確保首頁按鈕在手機上也不會因為漸層縮放而改變大小 */
   .nav a.home-btn {
     box-shadow: 0 2px 8px rgba(110,168,255,0.3);
-  }
-
-  /* 5. 調整頁面主容器的頂部間距，防止被雙行 Navbar 遮擋 */
-  body {
-    padding-top: 130px; 
-  }
-  
-  /* 6. 容器 Padding 縮小 */
-  .container {
-    padding: 24px 16px;
-    margin-bottom: 30px;
-  }
-
-  .page-header h1 {
-    font-size: 28px;
-  }
-}
-
-/* 額外小螢幕優化 (例如 iPhone SE) */
-@media (max-width: 380px) {
-  .brand-group {
-    display: none; /* 極小螢幕隱藏副標題，只留導航 */
-  }
-  .brand-badge:not(.sub) {
-    display: block;
+    font-weight: 700 !important;
   }
 }
     /* ===== Container ===== */
