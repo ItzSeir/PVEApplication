@@ -157,6 +157,7 @@
 }
 
 /* ===== 手機版精準適配 (解決 14555 與 14558 的不一致問題) ===== */
+/* ===== 手機版精準適配 (同步江湖回憶錄 1:1 風格) ===== */
 @media (max-width: 768px) {
   body { padding-top: 150px !important; }
 
@@ -166,12 +167,16 @@
     padding: 10px 16px;
     width: calc(100% - 20px);
     border-radius: 24px;
+    z-index: 9999;
   }
 
   .topbar-content { flex-direction: column; gap: 8px; }
 
-  /* 移除 scale(0.9)，讓它跟回憶錄一樣維持 1:1 比例 */
-  .brand-group { justify-content: center; transform: none; }
+  /* 核心修正：移除 transform: scale 確保文字粗細(bold)與邊框不變細 */
+  .brand-group { 
+    justify-content: center; 
+    transform: none !important; 
+  }
 
   .nav {
     width: 100%;
@@ -183,11 +188,18 @@
   }
   .nav::-webkit-scrollbar { display: none; }
 
-  /* 強制統一手機版按鈕內距與字體大小 */
+  /* 核心修正：強制統一按鈕內距、字體與粗細 */
   .nav a {
-    padding: 6px 12px;
-    font-size: 11px !important; /* 同步江湖回憶錄設定 */
+    padding: 6px 12px !important; /* 精確控制按鈕大小 */
+    font-size: 11px !important; 
+    font-weight: 700 !important; /* 確保加粗程度一致 */
     white-space: nowrap;
+  }
+
+  /* 確保首頁按鈕在手機上也不會因為漸層縮放而改變大小 */
+  .nav a.home-btn {
+    box-shadow: 0 2px 8px rgba(110,168,255,0.3);
+    font-weight: 700 !important;
   }
 }
     .hero{
