@@ -32,6 +32,7 @@ body{
     radial-gradient(circle at top right, rgba(139,92,246,.16), transparent 24%),
     linear-gradient(180deg, var(--bg), var(--bg2));
   padding-top:110px;
+  min-height: 100vh;
 }
 
 /* ===== navbar ===== */
@@ -95,81 +96,108 @@ body{
   background: rgba(255,255,255,0.12);
 }
 
-/* ===== container ===== */
+/* ===== container & title ===== */
 .container{
   max-width:1200px;
   margin:auto;
-  padding:40px 20px;
+  padding:20px;
+}
+
+.page-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.page-header h1 {
+  font-size: 32px;
+  font-weight: 800;
+  margin-bottom: 8px;
+  background: linear-gradient(to right, #fff, var(--accent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.page-header p {
+  color: var(--muted);
+  font-size: 14px;
+  letter-spacing: 2px;
 }
 
 /* ===== filter ===== */
 .filter{
   text-align:center;
-  margin-bottom:20px;
+  margin-bottom:30px;
 }
 
 .filter button{
   margin:5px;
-  padding:8px 16px;
-  border:none;
+  padding:8px 20px;
+  border: 1px solid rgba(255,255,255,0.1);
   border-radius:20px;
   cursor:pointer;
   background:rgba(255,255,255,.05);
-  color:var(--text);
+  color:var(--muted);
+  transition: 0.3s;
 }
 
-.filter .active{
-  background:var(--accent);
+.filter button.active{
+  background: var(--accent);
+  color: white;
+  border-color: var(--accent);
 }
 
-/* ===== masonry ===== */
+/* ===== masonry grid ===== */
 .grid{
   position:relative;
+  width: 100%;
+  margin: 0 auto;
+  transition: height 0.4s ease;
 }
 
 .item{
-  position:relative;
-  width:calc(33.333% - 12px);
-  margin:6px;
+  position:absolute; /* 必須為 absolute 才能計算排版 */
+  width:calc(33.333% - 16px);
   border-radius:20px;
   overflow:hidden;
   cursor:pointer;
-  transition: transform .4s, opacity .4s;
+  transition: transform .4s, opacity .4s, top .4s, left .4s;
+  background: var(--bg2);
 }
 
+/* 讓寬圖片寬度加倍 */
 .item.v2{
-  position:relative;
-  width:calc(66.666% - 12px);
+  width:calc(66.666% - 16px);
 }
 
 .item.hide{
   opacity:0;
-  transform:scale(.85);
+  transform:scale(.8);
   pointer-events:none;
 }
 
-/* image */
 .gallery-img{
   width:100%;
   height:auto;
   display:block;
+  transition: transform 0.5s;
 }
 
-/* ===== hover info（你的設計） ===== */
+.item:hover .gallery-img {
+  transform: scale(1.05);
+}
+
+/* ===== hover info ===== */
 .gallery-info{
   position:absolute;
   bottom:0;
   left:0;
   right:0;
-  padding:20px;
-
-  background:linear-gradient(to top,rgba(0,0,0,0.85),transparent);
-
+  padding:30px 20px 20px;
+  background:linear-gradient(to top, rgba(0,0,0,0.9), transparent);
   opacity:0;
-  transform:translateY(20px);
+  transform:translateY(10px);
   transition:.3s;
-
-  z-index:2; /* 🔥 關鍵 */
+  z-index:2;
 }
 
 .item:hover .gallery-info{
@@ -181,91 +209,96 @@ body{
   font-size:12px;
   color:var(--gold);
   display:block;
+  margin-bottom: 4px;
 }
 
 .gallery-info .title{
   font-size:16px;
   font-weight:700;
+  color: #fff;
 }
 
 /* ===== lightbox ===== */
 .lightbox{
   position:fixed;
   inset:0;
-  background:rgba(0,0,0,.92);
+  background:rgba(0,0,0,.95);
   display:none;
   align-items:center;
   justify-content:center;
   z-index:9999;
+  backdrop-filter: blur(10px);
 }
 
 .lightbox.show{ display:flex; }
 
 .lightbox-inner{
-  max-width:900px;
+  max-width:1000px;
   width:90%;
-  max-height:90vh; /* 🔥 限制整體高度 */
   display:flex;
   flex-direction:column;
-  gap:16px;
+  gap:20px;
 }
 
-/* 🔥 圖片關鍵修正 */
 .lightbox img{
   max-width:100%;
-  max-height:70vh;   /* 🔥 限制高度 */
+  max-height:75vh;
   width:auto;
   height:auto;
   margin:auto;
-  object-fit:contain; /* 🔥 不裁切 */
-  border-radius:16px;
+  object-fit:contain;
+  border-radius:12px;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.5);
 }
 
 .lb-meta{
   background:rgba(255,255,255,.05);
-  padding:16px;
-  border-radius:12px;
+  padding:20px;
+  border-radius:16px;
+  border: 1px solid rgba(255,255,255,0.1);
 }
 
-.lb-date{
-  font-size:12px;
-  color:var(--gold);
-}
+.lb-date{ font-size:12px; color:var(--gold); margin-bottom:4px;}
+.lb-title{ font-size:20px; font-weight:700; margin-bottom:8px;}
+.lb-desc{ font-size:15px; color:var(--muted); line-height: 1.6;}
 
-.lb-title{
-  font-size:18px;
-  font-weight:700;
-}
-
-.lb-desc{
-  font-size:14px;
-  color:var(--muted);
-}
-
-/* arrows */
 .arrow{
   position:absolute;
   top:50%;
-  font-size:40px;
+  transform: translateY(-50%);
+  font-size:50px;
+  color: #fff;
   cursor:pointer;
+  padding: 20px;
+  user-select: none;
+  opacity: 0.5;
+  transition: 0.3s;
 }
+.arrow:hover { opacity: 1; }
+.left{ left:10px; }
+.right{ right:10px; }
 
-.left{ left:30px; }
-.right{ right:30px; }
+/* Mobile Responsive */
+@media (max-width: 900px) {
+  .item { width: calc(50% - 12px); }
+  .item.v2 { width: calc(100% - 12px); }
+}
+@media (max-width: 600px) {
+  .item, .item.v2 { width: calc(100% - 12px); position: relative !important; top:0 !important; left:0 !important; margin-bottom: 16px; transform: none !important;}
+  .grid { height: auto !important; }
+}
 
 </style>
 </head>
 
 <body>
 
-<!-- navbar -->
 <nav class="topbar">
   <div class="topbar-content">
     <div class="brand-group">
       <span class="brand-badge">夢回花深處</span>
       <span class="brand-badge sub">江湖回憶錄</span>
     </div>
-
     <div class="nav">
       <a href="index.html" class="home-btn">首頁</a>
       <a href="PVERegistration.html">俠境報名</a>
@@ -275,55 +308,56 @@ body{
 </nav>
 
 <div class="container">
+  
+  <header class="page-header">
+    <h1>夢回花深處</h1>
+    <p>江 · 湖 · 回 · 憶 · 錄</p>
+  </header>
 
-<div class="filter">
-  <button class="active" data-filter="all">全部</button>
-  <button data-filter="nye">跨年</button>
-  <button data-filter="daily">日常</button>
-</div>
-
-<div class="grid" id="grid">
-
-  <div class="item" data-category="nye"
-       data-title="跨年合照"
-       data-date="2026.01.01"
-       data-desc="那一晚煙火與歡笑交織，我們一起迎接新的江湖篇章。">
-    <img src="https://raw.githubusercontent.com/ItzSeir/WhereWindMeet/main/%E7%9B%B8%E7%89%87/%E8%B7%A8%E5%B9%B42025-2026.png" class="gallery-img">
-    <div class="gallery-info">
-      <span class="date">2026.01.01</span>
-      <span class="title">跨年合照</span>
-    </div>
+  <div class="filter">
+    <button class="active" data-filter="all">全部</button>
+    <button data-filter="nye">跨年</button>
+    <button data-filter="daily">日常</button>
   </div>
 
-  <div class="item v2" data-category="daily"
-       data-title="夢回舞獅團"
-       data-date="2026.02.13"
-       data-desc="夢回舞獅團出戰！">
-    <img src="https://raw.githubusercontent.com/ItzSeir/WhereWindMeet/main/%E7%9B%B8%E7%89%87/%E8%88%9E%E7%8D%85%EF%BC%8813Feb26%EF%BC%89.png" class="gallery-img">
-    <div class="gallery-info">
-      <span class="date">2026.02.13</span>
-      <span class="title">夢回舞獅團</span>
+  <div class="grid" id="grid">
+    <div class="item" data-category="nye"
+         data-title="跨年合照"
+         data-date="2026.01.01"
+         data-desc="那一晚煙火與歡笑交織，我們一起迎接新的江湖篇章。">
+      <img src="https://raw.githubusercontent.com/ItzSeir/WhereWindMeet/main/%E7%9B%B8%E7%89%87/%E8%B7%A8%E5%B9%B42025-2026.png" class="gallery-img">
+      <div class="gallery-info">
+        <span class="date">2026.01.01</span>
+        <span class="title">跨年合照</span>
+      </div>
+    </div>
+
+    <div class="item v2" data-category="daily"
+         data-title="夢回舞獅團"
+         data-date="2026.02.13"
+         data-desc="夢回舞獅團出戰！">
+      <img src="https://raw.githubusercontent.com/ItzSeir/WhereWindMeet/main/%E7%9B%B8%E7%89%87/%E8%88%9E%E7%8D%85%EF%BC%8813Feb26%EF%BC%89.png" class="gallery-img">
+      <div class="gallery-info">
+        <span class="date">2026.02.13</span>
+        <span class="title">夢回舞獅團</span>
+      </div>
+    </div>
+
+    <div class="item" data-category="daily"
+         data-title="搖滾歌手"
+         data-date="2026.02.16"
+         data-desc="這是搖滾歌手還是殺手?">
+      <img src="https://raw.githubusercontent.com/ItzSeir/WhereWindMeet/main/%E7%9B%B8%E7%89%87/%E6%90%96%E6%BB%BE%E6%AD%8C%E6%89%8B%20%40%E6%9B%B2%E7%B5%A1%E5%AF%A7.png" class="gallery-img">
+      <div class="gallery-info">
+        <span class="date">2026.02.16</span>
+        <span class="title">搖滾歌手 @曲絡寧</span>
+      </div>
     </div>
   </div>
-
-  <div class="item" data-category="daily"
-       data-title="搖滾歌手"
-       data-date="2026.02.16"
-       data-desc="這是搖滾歌手還是殺手?">
-    <img src="https://raw.githubusercontent.com/ItzSeir/WhereWindMeet/main/%E7%9B%B8%E7%89%87/%E6%90%96%E6%BB%BE%E6%AD%8C%E6%89%8B%20%40%E6%9B%B2%E7%B5%A1%E5%AF%A7.png" class="gallery-img">
-    <div class="gallery-info">
-      <span class="date">2026.02.16</span>
-      <span class="title">搖滾歌手 @曲絡寧</span>
-    </div>
-  </div>
-
-</div>
 </div>
 
-<!-- lightbox -->
 <div class="lightbox" id="lightbox">
   <div class="arrow left" id="prev">‹</div>
-
   <div class="lightbox-inner">
     <img id="light-img">
     <div class="lb-meta">
@@ -332,114 +366,123 @@ body{
       <div class="lb-desc" id="lb-desc"></div>
     </div>
   </div>
-
   <div class="arrow right" id="next">›</div>
 </div>
 
 <script>
 const grid = document.getElementById('grid');
 const items = Array.from(document.querySelectorAll('.item'));
-
 let current = 0;
 
-/* masonry */
+/* 改進後的 Masonry 佈局邏輯 */
 function layout(){
-  const cols = window.innerWidth < 768 ? 1 :
-               window.innerWidth < 1100 ? 2 : 3;
+  if(window.innerWidth <= 600) return; // 手機版交給 CSS 流式排版
 
+  const gutter = 16;
+  const containerWidth = grid.offsetWidth;
+  const cols = window.innerWidth < 900 ? 2 : 3;
+  const colWidth = (containerWidth / cols);
+  
   const heights = Array(cols).fill(0);
 
-  items.forEach(item=>{
-    if(item.classList.contains('hide')) return;
+  items.forEach(item => {
+    if(item.classList.contains('hide')) {
+        item.style.display = 'none';
+        return;
+    }
+    item.style.display = 'block';
 
-    const isBig = item.classList.contains('v2');
-
+    const isBig = item.classList.contains('v2') && cols > 1;
     let col = heights.indexOf(Math.min(...heights));
 
-    /* 🔥 防止 v2 爆版 */
-    if(isBig && col === cols - 1){
-      col = cols - 2;
-    }
+    // 如果是寬圖但剛好在最後一欄，挪到前一欄
+    if(isBig && col === cols - 1) col = cols - 2;
 
-    const x = col * (100/cols);
-    const y = heights[col];
+    const posX = col * colWidth;
+    const posY = heights[col];
 
-    item.style.transform = `translate(${x}%, ${y}px)`;
+    item.style.left = `${posX}px`;
+    item.style.top = `${posY}px`;
 
-    const h = item.offsetHeight + 12;
+    const itemHeight = item.offsetHeight + gutter;
 
-    heights[col] += h;
-
-    if(isBig && col + 1 < cols){
-      heights[col + 1] += h;
+    if(isBig) {
+      // 寬圖同時佔用兩欄的高度
+      const maxHeight = Math.max(heights[col], heights[col+1]) + itemHeight;
+      heights[col] = maxHeight;
+      heights[col+1] = maxHeight;
+    } else {
+      heights[col] += itemHeight;
     }
   });
 
   grid.style.height = Math.max(...heights) + 'px';
 }
-/* filter */
+
+/* 確保圖片載入後重新排版 */
+window.addEventListener('load', layout);
+window.addEventListener('resize', layout);
+
+// 監聽每一張圖片載入完成 (關鍵修復)
+items.forEach(item => {
+    item.querySelector('img').addEventListener('load', layout);
+});
+
+/* 篩選器 */
 document.querySelectorAll('.filter button').forEach(btn=>{
   btn.onclick=()=>{
     document.querySelectorAll('.filter button').forEach(b=>b.classList.remove('active'));
     btn.classList.add('active');
-
-    const f=btn.dataset.filter;
+    const f = btn.dataset.filter;
 
     items.forEach(item=>{
-      item.classList.toggle('hide', !(f==='all'||item.dataset.category===f));
+      item.classList.toggle('hide', !(f==='all' || item.dataset.category===f));
     });
 
-    setTimeout(layout,300);
+    setTimeout(layout, 100); 
   };
 });
 
-/* lightbox */
-const lightbox=document.getElementById('lightbox');
-const lightImg=document.getElementById('light-img');
-
-const lbTitle=document.getElementById('lb-title');
-const lbDate=document.getElementById('lb-date');
-const lbDesc=document.getElementById('lb-desc');
+/* Lightbox 邏輯 */
+const lightbox = document.getElementById('lightbox');
+const lightImg = document.getElementById('light-img');
+const lbTitle = document.getElementById('lb-title');
+const lbDate = document.getElementById('lb-date');
+const lbDesc = document.getElementById('lb-desc');
 
 function show(i){
-  const item=items[i];
-  lightImg.src=item.querySelector('img').src;
-  lbTitle.textContent=item.dataset.title;
-  lbDate.textContent=item.dataset.date;
-  lbDesc.textContent=item.dataset.desc;
+  const item = items[i];
+  lightImg.src = item.querySelector('img').src;
+  lbTitle.textContent = item.dataset.title;
+  lbDate.textContent = item.dataset.date;
+  lbDesc.textContent = item.dataset.desc;
 }
 
-items.forEach((item,i)=>{
+items.forEach((item, i)=>{
   item.onclick=()=>{
-    current=i;
+    current = i;
     show(i);
     lightbox.classList.add('show');
   };
 });
 
-document.getElementById('next').onclick=()=>{
-  current=(current+1)%items.length;
+document.getElementById('next').onclick=(e)=>{
+  e.stopPropagation();
+  current = (current + 1) % items.length;
   show(current);
 };
 
-document.getElementById('prev').onclick=()=>{
-  current=(current-1+items.length)%items.length;
+document.getElementById('prev').onclick=(e)=>{
+  e.stopPropagation();
+  current = (current - 1 + items.length) % items.length;
   show(current);
 };
 
-document.addEventListener('keydown',e=>{
-  if(!lightbox.classList.contains('show')) return;
-  if(e.key==="ArrowRight") document.getElementById('next').click();
-  if(e.key==="ArrowLeft") document.getElementById('prev').click();
-  if(e.key==="Escape") lightbox.classList.remove('show');
-});
-
-lightbox.onclick=e=>{
-  if(e.target===lightbox) lightbox.classList.remove('show');
+lightbox.onclick = (e) => {
+  if(e.target === lightbox || e.target.classList.contains('lightbox-inner')) {
+    lightbox.classList.remove('show');
+  }
 };
-
-window.addEventListener('load',layout);
-window.addEventListener('resize',layout);
 </script>
 
 </body>
