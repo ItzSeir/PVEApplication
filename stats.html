@@ -72,7 +72,7 @@ body {
 .legend-item { display: flex; align-items: center; gap: 8px; font-size: 11px; color: #ccc; margin-bottom: 4px; }
 .dot { width: 8px; height: 8px; border-radius: 50%; }
 
-/* ===== Tooltip & Interaction ===== */
+/* ===== Tooltip ===== */
 .tooltip {
   position: fixed; padding: 8px 12px; background: rgba(15, 22, 42, 0.9);
   border: 1px solid var(--accent); color: #fff; border-radius: 6px;
@@ -148,6 +148,16 @@ body {
 document.addEventListener('DOMContentLoaded', function(){
 const tooltip = document.getElementById('tooltip');
 
+// 獲取 CSS 顏色變數
+const styles = getComputedStyle(document.documentElement);
+const colors = {
+    gen1: styles.getPropertyValue('--gen1').trim(),
+    gen2: styles.getPropertyValue('--gen2').trim(),
+    gen3: styles.getPropertyValue('--gen3').trim(),
+    gen4: styles.getPropertyValue('--gen4').trim(),
+    gen5: styles.getPropertyValue('--gen5').trim()
+};
+
 const cy = cytoscape({
   container: document.getElementById('cy'),
   style: [
@@ -178,11 +188,11 @@ const cy = cytoscape({
         'arrow-scale': 0.8
       }
     },
-    { selector: '.g1', style: { 'background-color': var('--gen1'), 'width': '75px', 'height': '28px' }},
-    { selector: '.g2', style: { 'background-color': var('--gen2') }},
-    { selector: '.g3', style: { 'background-color': var('--gen3') }},
-    { selector: '.g4', style: { 'background-color': var('--gen4') }},
-    { selector: '.g5', style: { 'background-color': var('--gen5') }},
+    { selector: '.g1', style: { 'background-color': colors.gen1, 'width': '75px', 'height': '28px' }},
+    { selector: '.g2', style: { 'background-color': colors.gen2 }},
+    { selector: '.g3', style: { 'background-color': colors.gen3 }},
+    { selector: '.g4', style: { 'background-color': colors.gen4 }},
+    { selector: '.g5', style: { 'background-color': colors.gen5 }},
     { selector: '.highlighted', style: { 'border-width': 2, 'border-color': '#fff' }}
   ],
 
@@ -238,11 +248,6 @@ const cy = cytoscape({
   }
 });
 
-/* Helper function for CSS variables in JS */
-function var(name) {
-  return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
-}
-
 /* Hover Interaction */
 cy.on('mouseover', 'node', e => {
   tooltip.innerHTML = `成員: ${e.target.id()}`;
@@ -261,13 +266,11 @@ cy.on('tap', function(e) {
   } else if (e.target.isNode()) {
     const node = e.target;
     cy.elements().addClass('faded').removeClass('highlighted');
-    // 獲取連結的節點與線條
     const neighborhood = node.closedNeighborhood();
     neighborhood.removeClass('faded').addClass('highlighted');
   }
 });
 
-/* Window Resize Layout */
 window.addEventListener('resize', () => cy.layout({ name: 'cose' }).run());
 
 });
