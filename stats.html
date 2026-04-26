@@ -6,6 +6,7 @@
 <title>夢回花深處｜數據與脈絡</title>
 
 <meta name="view-transition" content="same-origin" />
+
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.26.0/cytoscape.min.js"></script>
 
@@ -72,7 +73,7 @@ body {
 .legend-item { display: flex; align-items: center; gap: 8px; font-size: 11px; color: #ccc; margin-bottom: 4px; }
 .dot { width: 8px; height: 8px; border-radius: 50%; }
 
-/* ===== Tooltip ===== */
+/* ===== Tooltip & Highlight Styles ===== */
 .tooltip {
   position: fixed; padding: 8px 12px; background: rgba(15, 22, 42, 0.9);
   border: 1px solid var(--accent); color: #fff; border-radius: 6px;
@@ -132,11 +133,11 @@ body {
     <div class="stat-card full">
       <div id="cy"></div>
       <div class="legend">
-        <div class="legend-item"><span class="dot" style="background:var(--gen1)"></span> 第一代 (宗師)</div>
+        <div class="legend-item"><span class="dot" style="background:var(--gen1)"></span> 第一代 (最大)</div>
         <div class="legend-item"><span class="dot" style="background:var(--gen2)"></span> 第二代</div>
         <div class="legend-item"><span class="dot" style="background:var(--gen3)"></span> 第三代</div>
         <div class="legend-item"><span class="dot" style="background:var(--gen4)"></span> 第四代</div>
-        <div class="legend-item"><span class="dot" style="background:var(--gen5)"></span> 第五代</div>
+        <div class="legend-item"><span class="dot" style="background:var(--gen5)"></span> 第五代 (最小)</div>
       </div>
     </div>
   </div>
@@ -160,6 +161,13 @@ const colors = {
 
 const cy = cytoscape({
   container: document.getElementById('cy'),
+  
+  // ===== 鎖定縮放設定 =====
+  minZoom: 1,
+  maxZoom: 1,
+  userZoomingEnabled: false, // 禁止縮放
+  panningEnabled: true,      // 允許平移拖拽
+
   style: [
     { 
       selector: 'node', 
@@ -167,14 +175,15 @@ const cy = cytoscape({
         'label': 'data(id)', 
         'color': '#fff',
         'font-size': '10px',
+        'font-weight': 'bold', // 文字加粗
         'text-valign': 'center',
         'text-halign': 'center',
         'background-color': '#1e293b',
         'shape': 'round-rectangle',
-        'width': '65px',
-        'height': '24px',
         'border-width': 1,
-        'border-color': 'rgba(255,255,255,0.2)'
+        'border-color': 'rgba(255,255,255,0.2)',
+        'transition-property': 'background-color, border-color, border-width, width, height',
+        'transition-duration': '0.3s'
       }
     },
     { 
@@ -188,12 +197,12 @@ const cy = cytoscape({
         'arrow-scale': 0.8
       }
     },
-    { selector: '.g1', style: { 'background-color': colors.gen1, 'width': '75px', 'height': '28px' }},
-    { selector: '.g2', style: { 'background-color': colors.gen2 }},
-    { selector: '.g3', style: { 'background-color': colors.gen3 }},
-    { selector: '.g4', style: { 'background-color': colors.gen4 }},
-    { selector: '.g5', style: { 'background-color': colors.gen5 }},
-    { selector: '.highlighted', style: { 'border-width': 2, 'border-color': '#fff' }}
+    // ===== 節點大小隨世代遞減 =====
+    { selector: '.g1', style: { 'background-color': colors.gen1, 'width': '85px', 'height': '32px', 'font-size': '11px' }},
+    { selector: '.g2', style: { 'background-color': colors.gen2, 'width': '70px', 'height': '26px' }},
+    { selector: '.g3', style: { 'background-color': colors.gen3, 'width': '60px', 'height': '22px' }},
+    { selector: '.g4', style: { 'background-color': colors.gen4, 'width': '55px', 'height': '20px', 'font-size': '9px' }},
+    { selector: '.g5', style: { 'background-color': colors.gen5, 'width': '45px', 'height': '18px', 'font-size': '8px' }}
   ],
 
   elements: [
@@ -242,9 +251,9 @@ const cy = cytoscape({
   layout: { 
     name: 'cose', 
     animate: true, 
-    nodeRepulsion: 10000, 
-    idealEdgeLength: 80, 
-    padding: 50 
+    nodeRepulsion: 15000, 
+    idealEdgeLength: 100, 
+    padding: 60 
   }
 });
 
@@ -269,6 +278,21 @@ cy.on('tap', function(e) {
     const neighborhood = node.closedNeighborhood();
     neighborhood.removeClass('faded').addClass('highlighted');
   }
+});
+
+// 跳轉動畫邏輯
+document.querySelectorAll('.nav a, .home-btn, .brand-group').forEach(link => {
+  link.onclick = (e) => {
+    const targetUrl = link.getAttribute('href');
+    if (!targetUrl || targetUrl.startsWith('#')) return;
+
+    if (document.startViewTransition) {
+      e.preventDefault();
+      document.startViewTransition(() => {
+        location.href = targetUrl;
+      });
+    }
+  };
 });
 
 window.addEventListener('resize', () => cy.layout({ name: 'cose' }).run());
