@@ -32,6 +32,7 @@ body{
     radial-gradient(circle at top right, rgba(139,92,246,.16), transparent 24%),
     linear-gradient(180deg, var(--bg), var(--bg2));
   padding-top:110px;
+  min-height: 100vh;
 }
 
 /* ===== navbar ===== */
@@ -106,103 +107,116 @@ body{
 .page-header {
   text-align: center;
   margin-bottom: 50px;
-  border-bottom: 1px solid rgba(255,255,255,0.1);
-  padding-bottom: 20px;
+  position: relative;
 }
 
 .page-title {
-  font-size: 36px;
+  font-size: 42px;
   font-weight: 800;
   margin: 0;
-  background: linear-gradient(to right, #fff, #b7e0ff);
+  background: linear-gradient(to right, #fff, var(--accent));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  letter-spacing: 4px;
 }
 
 .page-subtitle {
   color: var(--muted);
-  margin-top: 10px;
+  margin-top: 12px;
   font-size: 14px;
-  letter-spacing: 2px;
+  letter-spacing: 6px;
+  text-transform: uppercase;
+  opacity: 0.8;
+}
+
+.page-header::after {
+  content: "";
+  display: block;
+  width: 40px;
+  height: 2px;
+  background: var(--accent);
+  margin: 20px auto 0;
+  border-radius: 2px;
 }
 
 /* ===== filter buttons美化 ===== */
 .filter {
   text-align: center;
-  margin-bottom: 30px;
+  margin-bottom: 40px;
   display: flex;
   justify-content: center;
-  gap: 10px;
+  gap: 15px;
 }
 
 .filter button {
-  padding: 10px 24px;
+  padding: 12px 28px;
   border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 30px;
+  border-radius: 50px;
   cursor: pointer;
-  background: rgba(255, 255, 255, 0.05);
-  color: var(--text);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--muted);
   font-size: 14px;
   font-weight: 600;
-  transition: all 0.3s ease;
-  backdrop-filter: blur(5px);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  backdrop-filter: blur(10px);
 }
 
 .filter button:hover {
-  background: rgba(255, 255, 255, 0.1);
-  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  transform: translateY(-3px);
+  border-color: rgba(255, 255, 255, 0.3);
 }
 
 .filter .active {
-  background: linear-gradient(135deg, #a1cfff, #6ea8ff);
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
   color: #fff;
-  border-color: #a1cfff;
+  border-color: transparent;
+  box-shadow: 0 8px 20px rgba(110, 168, 255, 0.3);
 }
 
-/* ===== masonry grid & items比例小一點 ===== */
+/* ===== masonry grid & items比例與動畫 ===== */
 .grid {
   position: relative;
   width: 100%;
+  margin-top: 20px;
 }
 
 .item {
   position: absolute;
-  width: calc(33.333% - 10px); /* 比例縮小，三欄佈局 */
-  margin: 5px;
+  /* 初始寬度由 JS 計算以精確控制一行三個 */
   border-radius: 20px;
   overflow: hidden;
   cursor: pointer;
-  transition: transform .4s, opacity .4s;
   background-color: var(--panel);
+  /* 關鍵切換動畫 */
+  transition: 
+    transform 0.6s cubic-bezier(0.4, 0, 0.2, 1), 
+    opacity 0.5s ease, 
+    filter 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
 }
 
-.item.v2 {
-  width: calc(66.666% - 10px); /* 兩欄寬度 */
+.item:hover {
+  filter: brightness(1.1);
+  z-index: 10;
 }
 
 .item.hide {
   opacity: 0;
-  transform: scale(.85);
+  transform: scale(0.8) translate(0, 50px) !important; /* 強制覆蓋 JS 的 translate */
   pointer-events: none;
 }
 
-/* image size normalization */
 .gallery-img {
   width: 100%;
   height: auto;
   display: block;
-  object-fit: cover;
+  transition: transform 0.8s ease;
 }
 
-/* Adjust sizes for mobile and smaller screens to handle proportion change */
-@media (max-width: 800px) {
-    .item { width: calc(50% - 10px); }
-    .item.v2 { width: calc(100% - 10px); }
-}
-
-@media (max-width: 500px) {
-    .item { width: calc(100% - 10px); }
-    .item.v2 { width: calc(100% - 10px); }
+.item:hover .gallery-img {
+  transform: scale(1.08);
 }
 
 /* ===== hover info ===== */
@@ -211,11 +225,11 @@ body{
   bottom: 0;
   left: 0;
   right: 0;
-  padding: 20px;
-  background: linear-gradient(to top, rgba(0,0,0,0.85), transparent);
+  padding: 25px 20px;
+  background: linear-gradient(to top, rgba(11, 16, 32, 0.95) 0%, rgba(11, 16, 32, 0.6) 50%, transparent 100%);
   opacity: 0;
-  transform: translateY(20px);
-  transition: .3s;
+  transform: translateY(10px);
+  transition: all 0.4s ease;
   z-index: 2;
 }
 
@@ -225,79 +239,82 @@ body{
 }
 
 .gallery-info .date {
-  font-size: 12px;
+  font-size: 11px;
   color: var(--gold);
   display: block;
+  margin-bottom: 4px;
+  font-weight: 700;
+  letter-spacing: 1px;
 }
 
 .gallery-info .title {
   font-size: 16px;
   font-weight: 700;
+  color: #fff;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
 }
 
 /* ===== lightbox ===== */
 .lightbox {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,.92);
+  background: rgba(7, 10, 20, 0.96);
   display: none;
   align-items: center;
   justify-content: center;
   z-index: 9999;
+  backdrop-filter: blur(15px);
 }
 
 .lightbox.show { display: flex; }
 
 .lightbox-inner {
-  max-width: 900px;
+  max-width: 1000px;
   width: 90%;
   max-height: 90vh;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 20px;
 }
 
 .lightbox img {
   max-width: 100%;
-  max-height: 70vh;
+  max-height: 75vh;
   width: auto;
   height: auto;
   margin: auto;
   object-fit: contain;
-  border-radius: 16px;
+  border-radius: 12px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.6);
 }
 
 .lb-meta {
   background: rgba(255,255,255,.05);
-  padding: 16px;
-  border-radius: 12px;
+  padding: 24px;
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,0.1);
 }
 
-.lb-date {
-  font-size: 12px;
-  color: var(--gold);
-}
-
-.lb-title {
-  font-size: 18px;
-  font-weight: 700;
-}
-
-.lb-desc {
-  font-size: 14px;
-  color: var(--muted);
-}
+.lb-date { font-size: 12px; color: var(--gold); font-weight: 600;}
+.lb-title { font-size: 22px; font-weight: 800; margin: 5px 0 10px; }
+.lb-desc { font-size: 15px; color: var(--muted); line-height: 1.6; }
 
 /* arrows */
 .arrow {
   position: absolute;
   top: 50%;
-  font-size: 40px;
+  transform: translateY(-50%);
+  font-size: 60px;
+  color: rgba(255,255,255,0.2);
   cursor: pointer;
+  transition: 0.3s;
+  user-select: none;
+  padding: 20px;
 }
 
-.left { left: 30px; }
-.right { right: 30px; }
+.arrow:hover { color: var(--accent); }
+.left { left: 20px; }
+.right { right: 20px; }
 
 </style>
 </head>
@@ -323,13 +340,13 @@ body{
 
   <div class="page-header">
     <h1 class="page-title">夢回花深處</h1>
-    <p class="page-subtitle">江湖回憶錄 · 光影集錦</p>
+    <p class="page-subtitle">MEMORIES OF JIANGHU</p>
   </div>
 
   <div class="filter">
-    <button class="active" data-filter="all">全部</button>
-    <button data-filter="nye">跨年</button>
-    <button data-filter="daily">日常</button>
+    <button class="active" data-filter="all">全部回憶</button>
+    <button data-filter="nye">歲末跨年</button>
+    <button data-filter="daily">江湖日常</button>
   </div>
 
   <div class="grid" id="grid">
@@ -348,7 +365,7 @@ body{
     <div class="item v2" data-category="daily"
          data-title="夢回舞獅團"
          data-date="2026.02.13"
-         data-desc="夢回舞獅團出戰！">
+         data-desc="夢回舞獅團出戰！慶祝江湖盛世。">
       <img src="https://raw.githubusercontent.com/ItzSeir/WhereWindMeet/main/%E7%9B%B8%E7%89%87/%E8%88%9E%E7%8D%85%EF%BC%8813Feb26%EF%BC%89.png" class="gallery-img">
       <div class="gallery-info">
         <span class="date">2026.02.13</span>
@@ -359,7 +376,7 @@ body{
     <div class="item" data-category="daily"
          data-title="搖滾歌手"
          data-date="2026.02.16"
-         data-desc="這是搖滾歌手還是殺手?">
+         data-desc="這是搖滾歌手還是殺手？在花深處的音律之夜。">
       <img src="https://raw.githubusercontent.com/ItzSeir/WhereWindMeet/main/%E7%9B%B8%E7%89%87/%E6%90%96%E6%BB%BE%E6%AD%8C%E6%89%8B%20%40%E6%9B%B2%E7%B5%A1%E5%AF%A7.png" class="gallery-img">
       <div class="gallery-info">
         <span class="date">2026.02.16</span>
@@ -372,7 +389,6 @@ body{
 
 <div class="lightbox" id="lightbox">
   <div class="arrow left" id="prev">‹</div>
-
   <div class="lightbox-inner">
     <img id="light-img">
     <div class="lb-meta">
@@ -381,76 +397,50 @@ body{
       <div class="lb-desc" id="lb-desc"></div>
     </div>
   </div>
-
   <div class="arrow right" id="next">›</div>
 </div>
 
 <script>
-//Masonry layout function logic (keep proportion in mind)
 const grid = document.getElementById('grid');
 const items = Array.from(document.querySelectorAll('.item'));
-
 let current = 0;
 
-/* masonry */
+/* 強化版 Masonry 佈局：固定一行三個圖片 */
 function layout(){
-  const width = window.innerWidth;
-  let cols;
-  if (width < 500) {
-      cols = 1;
-  } else if (width < 800) {
-      cols = 2;
-  } else {
-      cols = 3;
-  }
-
-  const gutter = 10;
-  const colWidth = (grid.offsetWidth / cols) - (gutter * (cols - 1) / cols);
+  const width = grid.offsetWidth;
+  const cols = window.innerWidth < 768 ? (window.innerWidth < 500 ? 1 : 2) : 3; // 桌面端固定 3 欄
+  
+  const gutter = 20; // 間距
+  const colWidth = (width - (gutter * (cols - 1))) / cols;
   
   const heights = Array(cols).fill(0);
 
-  items.forEach(item=>{
+  items.forEach(item => {
     if(item.classList.contains('hide')) {
-        item.style.display = 'none';
+        // 隱藏時不參與高度計算
         return;
     }
-    item.style.display = 'block';
 
     const isBig = item.classList.contains('v2') && cols > 1;
+    let col = heights.indexOf(Math.min(...heights));
 
-    let col;
-    if (isBig && cols > 1) {
-        //If it's big, try placing in col 0 if available, or where height is minimum if both fit
-        if (cols === 3) {
-            if (heights[0] <= heights[1] && heights[0] <= heights[2]) {
-                col = 0;
-            } else if (heights[1] <= heights[0] && heights[1] <= heights[2]) {
-                col = 1; //Should only fit in 0 or 1 in 3cols
-                if (col + 1 >= cols) col = 0;
-            } else {
-                col = 0;
-            }
-        } else if (cols === 2) {
-             col = heights[0] <= heights[1] ? 0 : 0; //Forces span
-             if (col + 1 >= cols) col = 0;
-        }
-    } else {
-        col = heights.indexOf(Math.min(...heights));
-    }
+    // 寬圖跨欄處理
+    if (isBig && col === cols - 1) col = cols - 2;
 
     const x = col * (colWidth + gutter);
     const y = heights[col];
 
-    item.style.width = isBig && cols > 1 ? `${colWidth * 2 + gutter}px` : `${colWidth}px`;
+    // 設定寬度並定位
+    const currentItemWidth = isBig ? (colWidth * 2 + gutter) : colWidth;
+    item.style.width = `${currentItemWidth}px`;
     item.style.transform = `translate(${x}px, ${y}px)`;
 
     const h = item.offsetHeight + gutter;
 
-    if(isBig && col + 1 < cols){
-      //If spans, update both col heights to max
+    if(isBig){
       const maxH = Math.max(heights[col] + h, heights[col+1] + h);
       heights[col] = maxH;
-      heights[col + 1] = maxH;
+      heights[col+1] = maxH;
     } else {
       heights[col] += h;
     }
@@ -458,71 +448,76 @@ function layout(){
 
   grid.style.height = Math.max(...heights) + 'px';
 }
-/* filter */
-document.querySelectorAll('.filter button').forEach(btn=>{
-  btn.onclick=()=>{
-    document.querySelectorAll('.filter button').forEach(b=>b.classList.remove('active'));
+
+/* 篩選器觸發動畫 */
+document.querySelectorAll('.filter button').forEach(btn => {
+  btn.onclick = () => {
+    document.querySelectorAll('.filter button').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
 
-    const f=btn.dataset.filter;
+    const f = btn.dataset.filter;
 
-    items.forEach(item=>{
-      item.classList.toggle('hide', !(f==='all'||item.dataset.category===f));
+    items.forEach(item => {
+      if(f === 'all' || item.dataset.category === f) {
+        item.classList.remove('hide');
+      } else {
+        item.classList.add('hide');
+      }
     });
 
-    setTimeout(layout,10); //Short delay to allow reflow for correct height on unhide
+    // 延遲執行 layout 以確保動畫平滑
+    requestAnimationFrame(layout);
   };
 });
 
-/* lightbox */
-const lightbox=document.getElementById('lightbox');
-const lightImg=document.getElementById('light-img');
-
-const lbTitle=document.getElementById('lb-title');
-const lbDate=document.getElementById('lb-date');
-const lbDesc=document.getElementById('lb-desc');
+/* Lightbox 邏輯 */
+const lightbox = document.getElementById('lightbox');
+const lightImg = document.getElementById('light-img');
+const lbTitle = document.getElementById('lb-title');
+const lbDate = document.getElementById('lb-date');
+const lbDesc = document.getElementById('lb-desc');
 
 function show(i){
-  const item=items[i];
-  lightImg.src=item.querySelector('img').src;
-  lbTitle.textContent=item.dataset.title;
-  lbDate.textContent=item.dataset.date;
-  lbDesc.textContent=item.dataset.desc;
+  const visibleItems = items.filter(item => !item.classList.contains('hide'));
+  const target = visibleItems[i] || visibleItems[0];
+  if(!target) return;
+  
+  lightImg.src = target.querySelector('img').src;
+  lbTitle.textContent = target.dataset.title;
+  lbDate.textContent = target.dataset.date;
+  lbDesc.textContent = target.dataset.desc;
 }
 
-items.forEach((item,i)=>{
-  item.onclick=()=>{
-    current=i;
-    show(i);
+items.forEach((item) => {
+  item.onclick = () => {
+    const visibleItems = items.filter(i => !i.classList.contains('hide'));
+    current = visibleItems.indexOf(item);
+    show(current);
     lightbox.classList.add('show');
   };
 });
 
-document.getElementById('next').onclick=()=>{
-  current=(current+1)%items.length;
+document.getElementById('next').onclick = () => {
+  const visibleItems = items.filter(i => !i.classList.contains('hide'));
+  current = (current + 1) % visibleItems.length;
   show(current);
 };
 
-document.getElementById('prev').onclick=()=>{
-  current=(current-1+items.length)%items.length;
+document.getElementById('prev').onclick = () => {
+  const visibleItems = items.filter(i => !i.classList.contains('hide'));
+  current = (current - 1 + visibleItems.length) % visibleItems.length;
   show(current);
 };
 
-document.addEventListener('keydown',e=>{
-  if(!lightbox.classList.contains('show')) return;
-  if(e.key==="ArrowRight") document.getElementById('next').click();
-  if(e.key==="ArrowLeft") document.getElementById('prev').click();
-  if(e.key==="Escape") lightbox.classList.remove('show');
+lightbox.onclick = e => { if(e.target === lightbox) lightbox.classList.remove('show'); };
+
+// 監聽圖片加載以確保高度正確
+window.addEventListener('load', layout);
+window.addEventListener('resize', layout);
+// 圖片加載後再次觸發，防止 offsetHeight 為 0
+items.forEach(item => {
+  item.querySelector('img').onload = layout;
 });
-
-lightbox.onclick=e=>{
-  if(e.target===lightbox) lightbox.classList.remove('show');
-};
-
-window.addEventListener('load',layout);
-window.addEventListener('resize',layout);
-//Initial layout in case image loading is fast
-layout();
 </script>
 
 </body>
