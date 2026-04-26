@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>夢回花深處｜江湖數據庫</title>
+<title>夢回花深處｜江湖傳承星圖</title>
 
 <meta name="view-transition" content="same-origin" />
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -11,156 +11,160 @@
 
 <style>
 :root{
-  --bg:#0b1020;
-  --bg2:#131c35;
-  --panel:rgba(255,255,255,.05);
-  --line:rgba(255,255,255,.1);
-  --text:#eef2ff;
-  --muted:#a8b3cf;
-  --accent:#6ea8ff;
-  --gold:#ffd76a;
-  /* 世代色調 - 調整為發亮質感 */
-  --gen1: #3b82f6; --gen2: #60a5fa; --gen3: #a78bfa; --gen4: #f472b6; --gen5: #fb923c;
+  --bg: #050810;
+  --bg2: #0b1120;
+  --accent: #6ea8ff;
+  --line: rgba(110, 168, 255, 0.15);
+  
+  /* 專業級世代色盤 */
+  --gen1: #00d2ff; /* 賽博藍 */
+  --gen2: #3a7bd5; /* 皇家藍 */
+  --gen3: #9d50bb; /* 幻影紫 */
+  --gen4: #f00078; /* 玫瑰粉 */
+  --gen5: #ff8008; /* 烈陽橙 */
 }
 
 *{ box-sizing:border-box; }
+
 body{
-  margin:0; font-family:"Noto Sans TC", sans-serif; color:var(--text);
-  background: var(--bg); padding-top:110px; min-height: 100vh;
+  margin:0; font-family:"Noto Sans TC", sans-serif; color:#eef2ff;
+  background: var(--bg); padding-top:100px; min-height: 100vh;
+  overflow: hidden; /* 防止滾動條干擾星圖 */
 }
 
-/* ===== Navbar ===== */
+/* ===== Navbar (極致透明設計) ===== */
 .topbar {
   position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
-  width: calc(100% - 40px); max-width: 1100px; height: 64px; z-index: 1000;
-  display: flex; align-items: center; padding: 0 12px; border-radius: 999px;
-  background: rgba(15, 22, 42, 0.7); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.1);
-}
-.topbar-content { width: 100%; display: flex; justify-content: space-between; align-items: center; }
-.nav a { text-decoration: none; color: var(--muted); padding: 8px 18px; border-radius: 999px; font-size: 13px; font-weight: 600; }
-.nav a.active { color: #fff; background: rgba(255,255,255,0.1); }
-.nav a.home-btn { color: #fff; background: linear-gradient(135deg, #6ea8ff, #8b5cf6); }
-
-/* ===== 內容區 ===== */
-.container { max-width: 1300px; margin: auto; padding: 20px; }
-.page-header { text-align: center; margin-bottom: 30px; }
-.page-title { font-size: 32px; font-weight: 800; background: linear-gradient(to right, #fff, var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-
-/* ===== Chart 容器 ===== */
-.chart-card {
-  background: var(--bg2);
-  border: 1px solid var(--line);
-  border-radius: 30px;
-  position: relative;
-  overflow: hidden;
-  box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+  width: calc(100% - 40px); max-width: 1100px; height: 60px; z-index: 1000;
+  display: flex; align-items: center; padding: 0 20px; border-radius: 30px;
+  background: rgba(10, 15, 30, 0.4); backdrop-filter: blur(25px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 10px 40px rgba(0,0,0,0.5);
 }
 
+.nav a { text-decoration: none; color: #a8b3cf; padding: 10px 20px; font-size: 13px; font-weight: 700; transition: 0.3s; }
+.nav a.active { color: #fff; text-shadow: 0 0 10px var(--accent); }
+
+/* ===== 標題佈局 ===== */
+.header-overlay {
+  position: absolute; top: 100px; left: 50%; transform: translateX(-50%);
+  text-align: center; pointer-events: none; z-index: 5;
+}
+.page-title {
+  font-size: 28px; font-weight: 900; margin: 0;
+  letter-spacing: 10px; text-transform: uppercase;
+  background: linear-gradient(to bottom, #fff, #666);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+
+/* ===== Chart 主畫布 ===== */
 #cy {
-  width: 100%;
-  height: 750px;
-  background-image: 
-    radial-gradient(circle at 2px 2px, rgba(255,255,255,0.03) 1px, transparent 0);
-  background-size: 40px 40px; /* 網格背景 */
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  background: 
+    radial-gradient(circle at 50% 50%, #0d152b 0%, #050810 100%);
 }
 
-/* 圖例 */
-.legend {
-  position: absolute; bottom: 30px; left: 30px;
-  background: rgba(15, 22, 42, 0.9);
-  padding: 20px; border-radius: 20px; border: 1px solid var(--line);
-  display: flex; flex-direction: column; gap: 10px; z-index: 10;
+/* 裝飾性網格 */
+.grid-overlay {
+  position: fixed; inset: 0; pointer-events: none;
+  background-image: linear-gradient(var(--line) 1px, transparent 1px), linear-gradient(90deg, var(--line) 1px, transparent 1px);
+  background-size: 60px 60px;
+  mask-image: radial-gradient(circle at center, black, transparent 80%);
+  opacity: 0.3;
 }
-.legend-item { display: flex; align-items: center; gap: 10px; font-size: 12px; color: var(--muted); }
-.dot { width: 10px; height: 10px; border-radius: 50%; }
+
+/* ===== 互動說明面板 ===== */
+.info-panel {
+  position: absolute; top: 100px; left: 30px;
+  background: rgba(10, 15, 30, 0.7); border: 1px solid var(--line);
+  padding: 20px; border-radius: 20px; backdrop-filter: blur(10px);
+}
+.legend-item { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; font-size: 12px; color: #a8b3cf; }
+.dot { width: 8px; height: 8px; border-radius: 50%; box-shadow: 0 0 10px currentColor; }
 
 </style>
 </head>
 <body>
 
 <nav class="topbar">
-  <div class="topbar-content">
-    <div style="font-weight: 800; padding: 0 20px;">夢回花深處</div>
-    <div class="nav">
-      <a href="index.html" class="home-btn">首頁</a>
-      <a href="gallery.html">江湖回憶錄</a>
-      <a href="stats.html" class="active">江湖脈絡</a>
-    </div>
+  <div style="font-weight: 900; color: #fff; letter-spacing: 2px;">WHERE WIND MEET</div>
+  <div class="nav" style="margin-left: auto;">
+    <a href="index.html">首頁</a>
+    <a href="gallery.html">江湖回憶</a>
+    <a href="stats.html" class="active">傳承星圖</a>
   </div>
 </nav>
 
-<div class="container">
-  <header class="page-header">
-    <h1 class="page-title">江湖脈絡 · 師徒傳承圖</h1>
-  </header>
-
-  <div class="chart-card">
-    <div class="legend">
-      <div class="legend-item"><span class="dot" style="background:var(--gen1)"></span> 第一代 (宗師)</div>
-      <div class="legend-item"><span class="dot" style="background:var(--gen2)"></span> 第二代</div>
-      <div class="legend-item"><span class="dot" style="background:var(--gen3)"></span> 第三代</div>
-      <div class="legend-item"><span class="dot" style="background:var(--gen4)"></span> 第四代</div>
-      <div class="legend-item"><span class="dot" style="background:var(--gen5)"></span> 第五代</div>
-    </div>
-    <div id="cy"></div>
-  </div>
+<div class="header-overlay">
+  <h1 class="page-title">江湖脈絡傳承圖</h1>
+  <div style="height: 1px; width: 100px; background: var(--accent); margin: 15px auto; opacity: 0.5;"></div>
 </div>
+
+<div class="grid-overlay"></div>
+
+<div class="info-panel">
+  <div class="legend-item"><span class="dot" style="color: var(--gen1); background: var(--gen1);"></span> 第一代 · 宗師</div>
+  <div class="legend-item"><span class="dot" style="color: var(--gen2); background: var(--gen2);"></span> 第二代 · 傳人</div>
+  <div class="legend-item"><span class="dot" style="color: var(--gen3); background: var(--gen3);"></span> 第三代 · 門生</div>
+  <div class="legend-item"><span class="dot" style="color: var(--gen4); background: var(--gen4);"></span> 第四代 · 執事</div>
+  <div class="legend-item"><span class="dot" style="color: var(--gen5); background: var(--gen5);"></span> 第五代 · 新秀</div>
+  <p style="font-size: 10px; color: #555; margin-top: 15px;">※ 支援縮放及自由拖拽節點</p>
+</div>
+
+<div id="cy"></div>
 
 <script>
 document.addEventListener('DOMContentLoaded', function(){
   const cy = cytoscape({
     container: document.getElementById('cy'),
-    layout: {
-      name: 'cose', // 彈簧佈局
-      componentSpacing: 120,
-      nodeRepulsion: 8000,
-      edgeElasticity: 100,
-      nestingFactor: 1.2,
-      padding: 50,
-      animate: true,
-      gravity: 0.25
-    },
+    userZoomingEnabled: true,
+    userPanningEnabled: true,
+    boxSelectionEnabled: false,
+    
     style: [
       {
         selector: 'node',
         style: {
-          'label': 'data(id)',
+          'content': 'data(id)',
           'color': '#fff',
-          'font-size': '12px',
+          'font-size': '11px',
+          'font-family': 'Noto Sans TC',
           'text-valign': 'bottom',
-          'text-margin-y': '8px',
-          'background-color': 'var(--muted)',
-          'width': '16px', 'height': '16px',
-          'text-outline-width': 2,
-          'text-outline-color': '#0b1020',
-          'transition-property': 'width, height, background-color, box-shadow',
-          'transition-duration': '0.3s'
+          'text-margin-y': '10px',
+          'background-color': '#fff',
+          'width': 12, 'height': 12,
+          'text-outline-width': 0,
+          'transition-property': 'width, height, background-color, box-shadow, font-size',
+          'transition-duration': '0.3s',
+          'overlay-opacity': 0
         }
       },
       {
         selector: 'edge',
         style: {
-          'width': 1.5,
-          'line-color': 'rgba(255,255,255,0.1)',
-          'target-arrow-color': 'rgba(255,255,255,0.2)',
-          'target-arrow-shape': 'vee',
+          'width': 1,
+          'line-color': 'rgba(255, 255, 255, 0.1)',
+          'target-arrow-color': 'rgba(255, 255, 255, 0.1)',
+          'target-arrow-shape': 'triangle',
           'curve-style': 'bezier',
-          'arrow-scale': 0.8
+          'arrow-scale': 0.6,
+          'opacity': 0.4
         }
       },
-      // 世代樣式定義
-      { selector: '.g1', style: { 'background-color': '#3b82f6', 'width': 22, 'height': 22, 'box-shadow': '0 0 15px #3b82f6' } },
-      { selector: '.g2', style: { 'background-color': '#60a5fa', 'width': 18, 'height': 18 } },
-      { selector: '.g3', style: { 'background-color': '#a78bfa' } },
-      { selector: '.g4', style: { 'background-color': '#f472b6' } },
-      { selector: '.g5', style: { 'background-color': '#fb923c' } },
+      // 霓虹世代特效
+      { selector: '.g1', style: { 'background-color': '#00d2ff', 'width': 18, 'height': 18, 'box-shadow': '0 0 20px #00d2ff', 'font-weight': '800' } },
+      { selector: '.g2', style: { 'background-color': '#3a7bd5', 'width': 15, 'height': 15, 'box-shadow': '0 0 15px #3a7bd5' } },
+      { selector: '.g3', style: { 'background-color': '#9d50bb', 'box-shadow': '0 0 10px #9d50bb' } },
+      { selector: '.g4', style: { 'background-color': '#f00078', 'box-shadow': '0 0 10px #f00078' } },
+      { selector: '.g5', style: { 'background-color': '#ff8008', 'box-shadow': '0 0 10px #ff8008' } },
       
-      // 懸停互動
-      { selector: 'node:hover', style: { 'width': 28, 'height': 28, 'font-size': '14px', 'z-index': 999 } },
-      { selector: 'edge:hover', style: { 'line-color': '#6ea8ff', 'width': 3, 'opacity': 1 } }
+      // 懸停高亮
+      { selector: 'node:hover', style: { 'width': 25, 'height': 25, 'font-size': '15px', 'text-margin-y': '15px', 'z-index': 9999 } },
+      { selector: 'edge:hover', style: { 'width': 2, 'line-color': '#fff', 'opacity': 1 } }
     ],
+    
     elements: [
-      // 節點定義
+      // 節點清單
       { data: { id: '姜澈' }, classes: 'g1' },
       { data: { id: '花臻茵' }, classes: 'g2' },
       { data: { id: '似水' }, classes: 'g3' },
@@ -187,19 +191,15 @@ document.addEventListener('DOMContentLoaded', function(){
 
       { data: { id: '楚小閣' }, classes: 'g1' },
       { data: { id: '稚米' }, classes: 'g2' },
-
       { data: { id: '鯨滿' }, classes: 'g1' },
       { data: { id: '姬蕭遙' }, classes: 'g2' },
-
       { data: { id: '蘋' }, classes: 'g1' },
       { data: { id: '冉冉生煙' }, classes: 'g2' },
-
       { data: { id: '白雲凌' }, classes: 'g1' },
       { data: { id: '無名' }, classes: 'g2' },
-
       { data: { id: '乖乖' }, classes: 'g1' },
 
-      // 連線關係 (嚴格按照圖片一)
+      // 連結清單
       { data: { source: '姜澈', target: '花臻茵' } },
       { data: { source: '花臻茵', target: '似水' } },
       { data: { source: '花臻茵', target: '曲絡寧' } },
@@ -208,7 +208,6 @@ document.addEventListener('DOMContentLoaded', function(){
       { data: { source: '似水', target: '郁竹' } },
       { data: { source: '青葉', target: '多多' } },
       { data: { source: '青葉', target: '少音' } },
-
       { data: { source: '曲絡寧', target: '白離' } },
       { data: { source: '白離', target: '沐雨橙風' } },
       { data: { source: '白離', target: '雨宮天' } },
@@ -216,19 +215,46 @@ document.addEventListener('DOMContentLoaded', function(){
       { data: { source: '雨宮天', target: '艾倫' } },
       { data: { source: '雨宮天', target: '東方念' } },
       { data: { source: '雨宮天', target: '筱風' } },
-
       { data: { source: '芝士漢堡', target: '顧立舟' } },
       { data: { source: '芝士漢堡', target: '葉染塵' } },
       { data: { source: '芝士漢堡', target: '一杯豆漿' } },
       { data: { source: '顧立舟', target: '羽玄' } },
-
       { data: { source: '楚小閣', target: '稚米' } },
       { data: { source: '鯨滿', target: '姬蕭遙' } },
       { data: { source: '蘋', target: '冉冉生煙' } },
       { data: { source: '白雲凌', target: '無名' } },
       { data: { source: '乖乖', target: '羽玄' } }
-    ]
+    ],
+    
+    layout: {
+      name: 'cose',
+      animate: true,
+      animationDuration: 1000,
+      refresh: 20,
+      fit: true,
+      padding: 100,
+      nodeRepulsion: 10000,
+      idealEdgeLength: 80,
+      edgeElasticity: 100
+    }
   });
+
+  // 點擊節點爆發特效模擬 (裝飾)
+  cy.on('tap', 'node', function(evt){
+    const node = evt.target;
+    console.log('Clicked: ' + node.id());
+  });
+});
+
+// 通用平滑切換
+document.querySelectorAll('a').forEach(link => {
+  link.onclick = (e) => {
+    const href = link.getAttribute('href');
+    if (href && !href.startsWith('#') && document.startViewTransition) {
+      e.preventDefault();
+      document.startViewTransition(() => { location.href = href; });
+    }
+  };
 });
 </script>
 
