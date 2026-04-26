@@ -168,11 +168,13 @@ body{
   box-shadow: 0 8px 20px rgba(110, 168, 255, 0.3);
 }
 
-/* ===== masonry grid ===== */
+/* ===== pinterest masonry grid ===== */
 .grid {
   position: relative;
   width: 100%;
   margin-top: 20px;
+  /* 移除固定高度，由 JS 動態更新 */
+  transition: height 0.5s ease;
 }
 
 .item {
@@ -181,18 +183,15 @@ body{
   overflow: hidden;
   cursor: pointer;
   background-color: var(--panel);
-
-  /* 🔥 加這個 */
-  aspect-ratio: 3 / 2;
-
+  /* 移除 aspect-ratio，讓圖片決定高度 */
+  
   transition: 
     transform 0.6s cubic-bezier(0.4, 0, 0.2, 1), 
-    opacity 0.5s ease;
+    opacity 0.5s ease,
+    top 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+    left 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
-.item.v2 {
-  aspect-ratio: 3 / 4; /* 🔥 更高 */
-}
-  
+
 .item.hide {
   opacity: 0;
   transform: scale(0.8) translate(0, 50px) !important;
@@ -201,11 +200,14 @@ body{
 
 .gallery-img {
   width: 100%;
-  height: 100%;
-  object-fit: cover; /* 🔥 關鍵 */
+  height: auto; /* Pinterest 風格必須是 auto */
+  display: block;
+  object-fit: cover;
+  transition: transform 0.5s ease;
 }
+
 .item:hover .gallery-img {
-  transform: scale(1.08);
+  transform: scale(1.05);
 }
 
 /* ===== hover info ===== */
@@ -329,50 +331,58 @@ const items = Array.from(document.querySelectorAll('.item'));
 
 function layout(){
   const containerWidth = grid.offsetWidth;
-  const cols = window.innerWidth > 768 ? 3 : (window.innerWidth < 500 ? 1 : 2);
+  // 決定欄數
+  const cols = window.innerWidth > 900 ? 3 : (window.innerWidth < 600 ? 1 : 2);
   const gutter = 20;
   const colWidth = (containerWidth - (gutter * (cols - 1))) / cols;
 
   const heights = Array(cols).fill(0);
 
   items.forEach(item => {
-
     if(item.classList.contains('hide')){
       item.style.opacity = '0';
+      // 隱藏時稍微縮小以配合動畫
+      item.style.transform = `scale(0.8) translate(0, 50px)`;
       return;
     }
 
     item.style.opacity = '1';
 
-    const isBig = item.classList.contains('v2') && cols >= 3;
-
+    // Pinterest 風格中 v2 如果要佔兩格，邏輯如下：
+    const isBig = item.classList.contains('v2') && cols >= 2;
+    
+    // 找到高度最小的欄位
     let col = heights.indexOf(Math.min(...heights));
 
+    // 如果是寬圖且在最後一欄，強制往前移一欄以免爆出去
     if(isBig && col === cols - 1) col = cols - 2;
 
     const width = isBig ? (colWidth * 2 + gutter) : colWidth;
-
-    /* 🔥 高度直接用比例算（不靠 offsetHeight） */
-    const ratio = isBig ? (4/3) : (2/3);
-    const height = width * ratio;
+    
+    // 設定寬度後，讓瀏覽器計算真實高度
+    item.style.width = `${width}px`;
+    
+    // 獲取圖片適應寬度後的真實高度
+    const itemHeight = item.offsetHeight; 
 
     const x = col * (colWidth + gutter);
     const y = heights[col];
 
-    item.style.width = `${width}px`;
-    item.style.height = `${height}px`;
     item.style.transform = `translate(${x}px, ${y}px)`;
 
-    const h = height + gutter;
+    const totalItemHeight = itemHeight + gutter;
 
     if(isBig){
-      heights[col] += h;
-      heights[col+1] += h;
+      // 寬圖同時影響兩欄的高度，取最大值後填平
+      const newHeight = Math.max(heights[col], heights[col+1]) + totalItemHeight;
+      heights[col] = newHeight;
+      heights[col+1] = newHeight;
     } else {
-      heights[col] += h;
+      heights[col] += totalItemHeight;
     }
   });
 
+  // 更新容器高度以確保背景延伸
   grid.style.height = Math.max(...heights) + 'px';
 }
 
@@ -385,6 +395,8 @@ document.querySelectorAll('.filter button').forEach(btn => {
     items.forEach(item => {
       item.classList.toggle('hide', !(f === 'all' || item.dataset.category === f));
     });
+    // 動畫啟動後重新計算佈局
+    setTimeout(layout, 100);
   };
 });
 
@@ -432,7 +444,16 @@ lightbox.onclick = e => { if(e.target === lightbox) lightbox.classList.remove('s
 // 監聽加載與縮放
 window.addEventListener('load', layout);
 window.addEventListener('resize', layout);
-items.forEach(item => item.querySelector('img').onload = layout);
+
+// 關鍵：每張圖載入完成都要重排，Pinterest 才能抓到正確高度
+items.forEach(item => {
+  const img = item.querySelector('img');
+  if (img.complete) {
+    layout();
+  } else {
+    img.onload = layout;
+  }
+});
 </script>
 
 </body>
