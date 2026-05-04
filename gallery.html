@@ -156,17 +156,17 @@ body::after{
   padding:38px 20px 80px;
 }
 
-/* ===== Hero Redesigned ===== */
+/* ===== Hero ===== */
 .page-header{
   position:relative;
   text-align:center;
   margin-bottom:48px;
-  padding:48px 24px 36px;
+  padding:48px 24px 38px;
   border-radius:36px;
   overflow:hidden;
   background:
-    radial-gradient(circle at 24% 20%, rgba(110,168,255,.24), transparent 36%),
-    radial-gradient(circle at 76% 72%, rgba(139,92,246,.24), transparent 38%),
+    radial-gradient(circle at 24% 20%, rgba(110,168,255,.22), transparent 36%),
+    radial-gradient(circle at 76% 72%, rgba(139,92,246,.22), transparent 38%),
     linear-gradient(135deg, rgba(255,255,255,.105), rgba(255,255,255,.025));
   border:1px solid rgba(255,255,255,.12);
   box-shadow:0 30px 80px rgba(0,0,0,.35);
@@ -185,15 +185,9 @@ body::after{
   pointer-events:none;
 }
 
+/* Removed ugly blue glow line */
 .page-header::after{
-  content:"";
-  display:block;
-  width:90px;
-  height:3px;
-  margin:22px auto 0;
-  border-radius:999px;
-  background:linear-gradient(90deg, transparent, var(--accent), var(--accent2), transparent);
-  opacity:.85;
+  display:none;
 }
 
 .kicker{
@@ -605,7 +599,7 @@ body::after{
 
   .page-header{
     margin-bottom:30px;
-    padding:36px 16px 28px;
+    padding:36px 16px 30px;
     border-radius:28px;
   }
 
@@ -916,6 +910,7 @@ document.addEventListener('keydown', e => {
 });
 
 window.addEventListener('load', layout);
+
 window.addEventListener('resize', () => {
   clearTimeout(window.__layoutTimer);
   window.__layoutTimer = setTimeout(layout, 120);
