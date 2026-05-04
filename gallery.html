@@ -62,7 +62,7 @@ body::after{
   z-index:-1;
 }
 
-/* ===== Navbar：同步首頁手機版 ===== */
+/* ===== Navbar ===== */
 .topbar{
   position:fixed;
   top:20px;
@@ -156,40 +156,62 @@ body::after{
   padding:38px 20px 80px;
 }
 
-/* ===== hero ===== */
+/* ===== Hero Redesigned ===== */
 .page-header{
   position:relative;
   text-align:center;
-  margin-bottom:42px;
-  padding:34px 20px 26px;
+  margin-bottom:48px;
+  padding:48px 24px 36px;
+  border-radius:36px;
+  overflow:hidden;
+  background:
+    radial-gradient(circle at 24% 20%, rgba(110,168,255,.24), transparent 36%),
+    radial-gradient(circle at 76% 72%, rgba(139,92,246,.24), transparent 38%),
+    linear-gradient(135deg, rgba(255,255,255,.105), rgba(255,255,255,.025));
+  border:1px solid rgba(255,255,255,.12);
+  box-shadow:0 30px 80px rgba(0,0,0,.35);
+  backdrop-filter:blur(18px);
+  -webkit-backdrop-filter:blur(18px);
 }
 
 .page-header::before{
   content:"";
   position:absolute;
-  inset:0;
-  max-width:760px;
-  margin:auto;
-  border-radius:32px;
-  background:linear-gradient(135deg, rgba(255,255,255,.08), rgba(255,255,255,.02));
-  border:1px solid rgba(255,255,255,.08);
-  box-shadow:0 25px 70px rgba(0,0,0,.18);
-  z-index:-1;
+  inset:1px;
+  border-radius:35px;
+  background:
+    linear-gradient(120deg, rgba(255,255,255,.08), transparent 28%),
+    linear-gradient(to bottom, rgba(255,255,255,.04), transparent 55%);
+  pointer-events:none;
+}
+
+.page-header::after{
+  content:"";
+  display:block;
+  width:90px;
+  height:3px;
+  margin:22px auto 0;
+  border-radius:999px;
+  background:linear-gradient(90deg, transparent, var(--accent), var(--accent2), transparent);
+  opacity:.85;
 }
 
 .kicker{
+  position:relative;
   display:inline-flex;
   align-items:center;
-  gap:8px;
-  padding:8px 15px;
+  gap:10px;
+  padding:10px 18px;
   margin-bottom:18px;
   border-radius:999px;
   color:var(--gold);
   background:rgba(255,215,106,.08);
-  border:1px solid rgba(255,215,106,.18);
+  border:1px solid rgba(255,215,106,.25);
+  box-shadow:0 4px 20px rgba(255,215,106,.13);
   font-size:12px;
   font-weight:800;
   letter-spacing:2px;
+  z-index:1;
 }
 
 .kicker::before,
@@ -203,33 +225,28 @@ body::after{
 }
 
 .page-title{
-  font-size:clamp(34px, 6vw, 64px);
+  position:relative;
+  margin:18px 0 6px;
+  font-size:clamp(32px, 6vw, 64px);
   line-height:1.08;
   font-weight:900;
-  margin:0;
-  background:linear-gradient(100deg, #fff 10%, #dce8ff 45%, var(--accent) 72%, var(--accent2));
+  letter-spacing:2px;
+  background:linear-gradient(120deg, #fff 0%, #dbeafe 35%, #a5b4fc 65%, #8b5cf6 100%);
   -webkit-background-clip:text;
   -webkit-text-fill-color:transparent;
-  letter-spacing:6px;
+  text-shadow:0 12px 30px rgba(0,0,0,.3);
+  z-index:1;
 }
 
 .page-subtitle{
+  position:relative;
   color:var(--muted);
-  margin:16px auto 0;
+  margin:12px auto 0;
   font-size:14px;
-  letter-spacing:7px;
+  letter-spacing:5px;
   text-transform:uppercase;
   opacity:.9;
-}
-
-.page-header::after{
-  content:"";
-  display:block;
-  width:76px;
-  height:3px;
-  background:linear-gradient(90deg, transparent, var(--accent), var(--accent2), transparent);
-  margin:24px auto 0;
-  border-radius:999px;
+  z-index:1;
 }
 
 /* ===== filter ===== */
@@ -474,6 +491,7 @@ body::after{
   letter-spacing:1px;
 }
 
+/* ===== animations ===== */
 @keyframes fadeIn{
   from{ opacity:0; }
   to{ opacity:1; }
@@ -500,7 +518,7 @@ body::after{
   }
 
   .page-subtitle{
-    letter-spacing:5px;
+    letter-spacing:4px;
   }
 
   .arrow{
@@ -587,15 +605,23 @@ body::after{
 
   .page-header{
     margin-bottom:30px;
-    padding:28px 14px 22px;
+    padding:36px 16px 28px;
+    border-radius:28px;
+  }
+
+  .kicker{
+    padding:8px 14px;
+    font-size:11px;
+    letter-spacing:1px;
   }
 
   .page-title{
-    letter-spacing:3px;
+    font-size:34px;
+    letter-spacing:1px;
   }
 
   .page-subtitle{
-    letter-spacing:4px;
+    letter-spacing:3px;
     font-size:12px;
   }
 
@@ -658,7 +684,7 @@ body::after{
   <div class="page-header">
     <div class="kicker">夢回花深處</div>
     <h1 class="page-title">江湖回憶錄</h1>
-    <p class="page-subtitle"></p>
+    <p class="page-subtitle">MEMORY GALLERY</p>
   </div>
 
   <div class="filter">
